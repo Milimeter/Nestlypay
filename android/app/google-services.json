@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "930117553769",
+    "project_id": "nestlypay-6dca4",
+    "storage_bucket": "nestlypay-6dca4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930117553769:android:ff590118e1a0263d15dcf8",
+        "android_client_info": {
+          "package_name": "com.razaq.investment.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930117553769-ters3l25srglduh4crjora5g0835unp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALU1IAuhYb3rGPRHkD4uF3f5EHSbkELUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930117553769-ters3l25srglduh4crjora5g0835unp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
