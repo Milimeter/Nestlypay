@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:investment_app/utils/custom_button.dart';
@@ -14,7 +16,87 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailtextEditingController = TextEditingController();
   TextEditingController _passwordtextEditingController =
       TextEditingController();
-    TextEditingController _usernametextEditingController = TextEditingController();
+  TextEditingController _usernametextEditingController =
+      TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+  AuthMethods authMethods = AuthMethods();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
+  /// Check if form is valid before perform login or signup
+  bool _validateAndSave() {
+    final form = _formKey.currentState;
+
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+
+    return false;
+  }
+
+  validateAndSubmit() async {
+    print("authentication process");
+    if (_validateAndSave()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await authMethods.signUp(_emailtextEditingController.text,
+            _passwordtextEditingController.text);
+        User currentUser;
+        currentUser = _auth.currentUser;
+
+        await authMethods.sendEmailVerification();
+
+        //FirebaseUser user = await _auth.currentUser;
+        await authMethods.addDataToDb(
+            currentUser: currentUser,
+            username: _usernametextEditingController.text.trim(),
+            password: _passwordtextEditingController.text.trim(),
+            );
+
+        String userId = currentUser.uid;
+        _showVerifyEmailSentDialog();
+        print('Signed up user: $userId');
+      } catch (e) {
+        print('Error: $e');
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _showVerifyEmailSentDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Verify your account"),
+          content:
+              new Text("Link to verify account has been sent to your email"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                //_changeFormToLogin();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +104,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: Align(
@@ -53,6 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               margin: EdgeInsets.only(top: 30),
               child: Center(
                 child: Form(
+                  key: _formKey,
                   child: ListView(
                     children: [
                       Image.asset("assets/images/signup.png", width: 200),
@@ -122,10 +210,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 35.0),
                         child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen())),
+                         onTap: () => validateAndSubmit(),
                           child: CustomButton(
                             label: 'Continue',
                             labelColour: Colors.white,
@@ -152,10 +237,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         color: Colors.blue, fontSize: 14),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                         Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen()));
                                         // navigate to desired screen
                                       })
                               ]),
@@ -191,6 +277,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       ),
     );
-  
   }
 }

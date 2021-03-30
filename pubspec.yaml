@@ -38,6 +38,10 @@ dependencies:
   percent_indicator:
   flutter_credit_card:
   custom_dialog:
+  cloud_firestore:
+  firebase_auth: ^0.18.1
+  firebase_core: ^0.5.0
+  get: ^3.10.2
 
 
 dev_dependencies:

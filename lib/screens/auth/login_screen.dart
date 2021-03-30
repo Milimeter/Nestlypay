@@ -1,11 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/forgot_password.dart';
 import 'package:investment_app/screens/auth/signup_screen.dart';
 import 'package:investment_app/screens/main_screens/control/admin2.dart';
 import 'package:investment_app/screens/main_screens/main_intro.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:investment_app/utils/custom_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,16 +15,139 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   bool obscureText = true;
   TextEditingController _emailtextEditingController = TextEditingController();
   TextEditingController _passwordtextEditingController =
       TextEditingController();
+  AuthMethods authMethods = AuthMethods();
+  bool _isLoading = false;
+  bool _isEmailVerified = false;
+  @override
+  dispose() {
+    _passwordtextEditingController.clear();
+    _emailtextEditingController.clear();
+    super.dispose();
+  }
+
+  // Check if form is valid before perform login or signup
+  bool _validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+
+    return false;
+  }
+
+  // performs signup
+  void validateAndSubmit() async {
+    print("performing login...");
+    if (_validateAndSave()) {
+      setState(() {
+        _isLoading = true;
+      });
+      String userId = "";
+      try {
+        await authMethods.signIn(_emailtextEditingController.text.trim(),
+            _passwordtextEditingController.text.trim());
+        print("signedIn ================>>>>>>>");
+        await _checkEmailVerification();
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
+
+        print('Signed up user: $userId');
+      } catch (e) {
+        print('Error: $e');
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _checkEmailVerification() async {
+    _isEmailVerified = await authMethods.isEmailVerified();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (!_isEmailVerified) {
+      _showVerifyEmailDialog();
+    } else {
+      
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainIntro()));
+    }
+  }
+
+  Future<void> _resentVerifyEmail() async {
+    await authMethods.sendEmailVerification();
+    _showVerifyEmailSentDialog();
+  }
+
+  _showVerifyEmailDialog() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Verify your account"),
+          content: new Text("Please verify account in the link sent to email"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Resend link"),
+              onPressed: () async {
+                await _resentVerifyEmail();
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showVerifyEmailSentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Verify your account"),
+          content:
+              new Text("Link to verify account has been sent to your email"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
+          _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: Align(
@@ -142,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    SignUpScreen())); 
+                                                    SignUpScreen()));
                                         // navigate to desired screen
                                       })
                               ]),
