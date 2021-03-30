@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:investment_app/utils/custom_button.dart';
@@ -11,6 +12,37 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController _emailtextEditingController = TextEditingController();
+  AuthMethods _authMethods = AuthMethods();
+  _showVerifyEmailDialog() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Password Reset"),
+          content: new Text(
+              "Your password reset link has been sent to the email provided"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () async {
+                // await _resentVerifyEmail();
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -83,10 +115,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 35.0),
                         child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen())),
+                          // onTap: () => Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => LoginScreen())),
+                          onTap: () async {
+                            await _authMethods.sendPasswordResetMail(
+                                _emailtextEditingController.text);
+                            _showVerifyEmailDialog();
+                          },
                           child: CustomButton(
                             label: 'Continue',
                             labelColour: Colors.white,

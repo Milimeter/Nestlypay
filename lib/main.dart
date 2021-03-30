@@ -1,15 +1,20 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
 import 'package:investment_app/screens/misc/intro_screen.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MaterialApp(
-  debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-    ));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SplashScreen(),
+  ));
+}
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,7 +22,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
   navigate() async {
     bool toBoarding = await getNewState();
     if (toBoarding) {
@@ -25,13 +29,12 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => IntroScreen()));
       });
-    }else{
+    } else {
       Timer(Duration(seconds: 4), () {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
       });
     }
-
   }
 
   getNewState() async {
@@ -42,11 +45,13 @@ class _SplashScreenState extends State<SplashScreen> {
             : false;
     return newUser;
   }
+
   @override
   void initState() {
     navigate();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
