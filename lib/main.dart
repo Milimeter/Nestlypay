@@ -1,18 +1,30 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:investment_app/provider/user_provider.dart';
+import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
+import 'package:investment_app/screens/home_screen.dart';
 import 'package:investment_app/screens/misc/intro_screen.dart';
 import 'package:investment_app/utils/colors.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SplashScreen(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+    ],
+    child: GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+    ),
   ));
 }
 
@@ -22,6 +34,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  AuthMethods authMethods = AuthMethods();
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    navigate();
+    super.initState();
+  }
+
   navigate() async {
     bool toBoarding = await getNewState();
     if (toBoarding) {
@@ -30,10 +51,29 @@ class _SplashScreenState extends State<SplashScreen> {
             context, MaterialPageRoute(builder: (context) => IntroScreen()));
       });
     } else {
-      Timer(Duration(seconds: 4), () {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      });
+      User currentUser;
+      currentUser = _firebaseAuth.currentUser;
+
+      if (currentUser == null) {
+        Timer(
+            Duration(seconds: 4),
+            () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                ));
+      } else {
+        Timer(
+          Duration(seconds: 4),
+          () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          ),
+        );
+      }
+
+      // Timer(Duration(seconds: 4), () {
+      //   Navigator.pushReplacement(
+      //       context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      // });
     }
   }
 
@@ -44,12 +84,6 @@ class _SplashScreenState extends State<SplashScreen> {
             ? true
             : false;
     return newUser;
-  }
-
-  @override
-  void initState() {
-    navigate();
-    super.initState();
   }
 
   @override

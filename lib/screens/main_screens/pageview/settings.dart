@@ -1,5 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_app/models/users.dart';
+import 'package:investment_app/provider/user_provider.dart';
+import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
 import 'package:investment_app/screens/main_screens/control/bank_info.dart';
 import 'package:investment_app/screens/main_screens/control/personal_info.dart';
@@ -7,6 +10,7 @@ import 'package:investment_app/screens/main_screens/control/referrals.dart';
 import 'package:investment_app/screens/main_screens/control/support.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -14,8 +18,9 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  Widget profileContainer() => Container(
-        height: MediaQuery.of(context).size.height * 0.1,
+  AuthMethods authMethods = AuthMethods();
+  Widget profileContainer(String name) => Container(
+        height: MediaQuery.of(context).size.height * 0.12,
         decoration: BoxDecoration(
             color: Colors.blue[800], borderRadius: BorderRadius.circular(35)),
         child: Center(
@@ -26,7 +31,7 @@ class _SettingsState extends State<Settings> {
               radius: 30,
             ),
             title: AutoSizeText(
-              "Jane Cooper",
+              name,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -81,10 +86,20 @@ class _SettingsState extends State<Settings> {
       context, MaterialPageRoute(builder: (context) => SupportPage()));
   referralPage() => Navigator.push(
       context, MaterialPageRoute(builder: (context) => ReferralPage()));
-  loginScreen() => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  loginScreen() {
+    authMethods.signOut();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (Route<dynamic> route) => false);
+   
+  }
+
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    UserData user = userProvider.getUser;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -117,7 +132,7 @@ class _SettingsState extends State<Settings> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                profileContainer(),
+                profileContainer(user.name),
                 SizedBox(height: 25),
                 listCard(
                   icon: Icons.inbox,

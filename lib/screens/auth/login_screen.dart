@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/forgot_password.dart';
 import 'package:investment_app/screens/auth/signup_screen.dart';
+import 'package:investment_app/screens/home_screen.dart';
 import 'package:investment_app/screens/main_screens/control/admin2.dart';
 import 'package:investment_app/screens/main_screens/main_intro.dart';
 import 'package:investment_app/utils/colors.dart';
@@ -63,6 +65,14 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoading = false;
         });
+        Get.snackbar(
+          "Error!",
+          "${e.toString()}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          duration: Duration(seconds: 5),
+        );
       }
     }
     setState(() {
@@ -76,9 +86,21 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_isEmailVerified) {
       _showVerifyEmailDialog();
     } else {
-      
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MainIntro()));
+      bool dataAdded = prefs.getBool("addedData") == null ||
+              prefs.getBool("addedData") == false
+          ? false
+          : true;
+      if (dataAdded) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (Route<dynamic> route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MainIntro()),
+            (Route<dynamic> route) => false);
+      }
     }
   }
 
@@ -179,6 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
               margin: EdgeInsets.only(top: 30),
               child: Center(
                 child: Form(
+                  key: _formKey,
                   child: ListView(
                     children: [
                       Image.asset("assets/images/login.png", width: 200),
@@ -195,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                           controller: _passwordtextEditingController,
                           obscureText: obscureText,
-                          maxLength: 8,
+                          maxLength: 14,
                           decoration: InputDecoration(
                               suffixIcon: GestureDetector(
                                   onTap: () {
@@ -233,10 +256,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 35.0),
                         child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainIntro())),
+                          onTap: (){
+                            validateAndSubmit();
+                          },
+                          // onTap: () => Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => MainIntro())),
                           child: CustomButton(
                             label: 'Login',
                             labelColour: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
 import 'package:investment_app/utils/colors.dart';
@@ -53,10 +54,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
         //FirebaseUser user = await _auth.currentUser;
         await authMethods.addDataToDb(
-            currentUser: currentUser,
-            username: _usernametextEditingController.text.trim(),
-            password: _passwordtextEditingController.text.trim(),
-            );
+          currentUser: currentUser,
+          username: _usernametextEditingController.text.trim(),
+          password: _passwordtextEditingController.text.trim(),
+        );
 
         String userId = currentUser.uid;
         _showVerifyEmailSentDialog();
@@ -66,8 +67,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() {
           _isLoading = false;
         });
+        Get.snackbar(
+          "Error!",
+          "${e.toString()}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          duration: Duration(seconds: 5),
+        );
       }
     }
+    print("Validate Error");
     setState(() {
       _isLoading = false;
     });
@@ -144,7 +154,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ListView(
                     children: [
                       Image.asset("assets/images/signup.png", width: 200),
+
+                      SizedBox(height: 24),
                       TextFormField(
+                        validator: (name) {
+                          // Pattern pattern =
+                          //     r'^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$';
+                          // RegExp regex = new RegExp(pattern);
+                          if (name.isEmpty)
+                            return 'Invalid username';
+                          else
+                            return null;
+                        },
                         controller: _usernametextEditingController,
                         decoration: InputDecoration(
                           hintText: "Your username",
@@ -159,6 +180,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 24),
                       TextFormField(
+                        validator: (String value) {
+                          Pattern pattern =
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                          RegExp regex = new RegExp(pattern);
+                          if (!regex.hasMatch(value))
+                            return 'Enter Valid Email';
+                          else
+                            return null;
+                        },
                         controller: _emailtextEditingController,
                         decoration: InputDecoration(
                           hintText: "Your email address",
@@ -173,9 +203,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 24),
                       TextFormField(
+                        validator: (password) {
+                          Pattern pattern =
+                              r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
+                          RegExp regex = new RegExp(pattern);
+                          if (!regex.hasMatch(password))
+                            return 'At least one letter, At least one number, and be longer than six charaters';
+                          else
+                            return null;
+                        },
                         controller: _passwordtextEditingController,
                         obscureText: obscureText,
-                        maxLength: 8,
+                        maxLength: 14,
                         decoration: InputDecoration(
                           suffixIcon: GestureDetector(
                               onTap: () {
@@ -197,20 +236,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                        child: Text(
-                          "Forgot your password?",
-                          style: TextStyle(
-                              fontSize: 14, color: UniversalColors.blueColor),
-                        ),
-                      ),
+                      // Container(
+                      //   alignment: Alignment.centerRight,
+                      //   margin:
+                      //       EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                      //   child: Text(
+                      //     "Forgot your password?",
+                      //     style: TextStyle(
+                      //         fontSize: 14, color: UniversalColors.blueColor),
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 35.0),
                         child: GestureDetector(
-                         onTap: () => validateAndSubmit(),
+                          onTap: () => validateAndSubmit(),
                           child: CustomButton(
                             label: 'Continue',
                             labelColour: Colors.white,

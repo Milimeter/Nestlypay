@@ -97,7 +97,7 @@ class _ChoosePlanState extends State<ChoosePlan> {
                   child: holder(
                     icon: LineIcons.mobilePhone,
                     text1: "₦20,000",
-                    text2: "Interest 30% ₦30,000",
+                    text2: "Interest 30% ₦26,000",
                     text3: "Coral",
                     color: Colors.orange[800],
                   ),
@@ -111,7 +111,7 @@ class _ChoosePlanState extends State<ChoosePlan> {
                   child: holder(
                     icon: LineIcons.home,
                     text1: "₦50,000",
-                    text2: "Interest 30% ₦75,000",
+                    text2: "Interest 30% ₦65,000",
                     text3: "Pearl",
                     color: Colors.blue[800],
                   ),
@@ -125,7 +125,7 @@ class _ChoosePlanState extends State<ChoosePlan> {
                   child: holder(
                     icon: LineIcons.crown,
                     text1: "₦100,000",
-                    text2: "Interest 30% ₦150,000",
+                    text2: "Interest 30% ₦130,000",
                     text3: "Garnet",
                     color: Colors.deepPurple,
                   ),
@@ -139,7 +139,7 @@ class _ChoosePlanState extends State<ChoosePlan> {
                   child: holder(
                     icon: LineIcons.biking,
                     text1: "₦200,000",
-                    text2: "Interest 30% ₦300,000",
+                    text2: "Interest 30% ₦260,000",
                     text3: "Sapphire",
                     color: Colors.green[900],
                   ),

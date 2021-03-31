@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/screens/main_screens/pageview/home.dart';
 import 'package:investment_app/screens/main_screens/pageview/people.dart';
 import 'package:investment_app/screens/main_screens/pageview/settings.dart';
 import 'package:investment_app/screens/main_screens/pageview/wallet.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,13 +16,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  
+  UserProvider userProvider;
+
   List<Widget> _widgetOptions = <Widget>[
-    Home(), 
+    Home(),
     People(),
     WalletPage(),
     Settings(),
   ];
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+      await userProvider.refreshUser();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   GButton(
                     icon: Icons.people,
-                    text: 'People',
+                    text: 'Accounts',
                   ),
                   GButton(
                     icon: LineIcons.wallet,

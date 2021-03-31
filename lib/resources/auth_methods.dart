@@ -63,6 +63,10 @@ class AuthMethods {
     return null;
   }
 
+  Future<void> signOut() async {
+    return _firebaseAuth.signOut();
+  }
+
   Future<void> deleteUser() async {
     User currentUser;
     currentUser = _firebaseAuth.currentUser;
@@ -89,19 +93,28 @@ class AuthMethods {
   }
 
   Future<void> addDataToDb(
-      {User currentUser, username, password, token, phone}) async {
+      {User currentUser, username, password, token, name}) async {
     UserData user = UserData(
       uid: currentUser.uid,
       email: currentUser.email,
-      name: currentUser.displayName,
+      name: name,
       password: password,
       //profilePhoto: currentUser.photoUrl,
       username: username,
     );
     //user details
-    firestore
-        .collection("users")
-        .doc(currentUser.uid)
-        .set(user.toMap(user));
+    firestore.collection("users").doc(currentUser.uid).set(user.toMap(user));
+  }
+
+  Future<void> updateDataInDb(
+      {User currentUser, name, phoneNo, contactAddress, refLink}) async {
+    UserData user = UserData(
+      name: name,
+      contactAddress: contactAddress,
+      phoneNo: phoneNo,
+      referralLink: refLink ?? "No Link",
+    );
+    //user details
+    firestore.collection("users").doc(currentUser.uid).update(user.toMap(user));
   }
 }

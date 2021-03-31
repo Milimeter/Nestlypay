@@ -1,9 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_app/models/users.dart';
+import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/screens/main_screens/control/choose_plan.dart';
 import 'package:investment_app/screens/main_screens/control/create_post.dart';
 import 'package:investment_app/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -139,6 +142,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    UserData user = userProvider.getUser;
+    var ns = user.name.split(" ");
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -165,7 +171,7 @@ class _HomeState extends State<Home> {
         child: Container(
           child: ListView(
             children: [
-              AutoSizeText("Welcome Charles",
+              AutoSizeText("Welcome ${ns[0]}",
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               assetBalance(),

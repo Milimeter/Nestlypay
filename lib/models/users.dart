@@ -5,9 +5,9 @@ class UserData {
   String username;
   String password;
   String profilePhoto;
-  bool otpVerified;
-  String token;
-  String phone;
+  String contactAddress;
+  String referralLink;
+  String phoneNo;
 
   UserData({
     this.uid,
@@ -16,6 +16,9 @@ class UserData {
     this.username,
     this.password,
     this.profilePhoto,
+    this.contactAddress,
+    this.referralLink,
+    this.phoneNo,
   });
 
   Map toMap(UserData user) {
@@ -26,6 +29,9 @@ class UserData {
     data['username'] = user.username;
     data['password'] = user.password;
     data['profilePhoto'] = user.profilePhoto;
+    data['contactAddress'] = user.contactAddress;
+    data['referralLink'] = user.referralLink;
+    data['phoneNo'] = user.phoneNo;
 
     return data;
   }
@@ -38,5 +44,8 @@ class UserData {
     this.username = mapData['username'];
     this.password = mapData['password'];
     this.profilePhoto = mapData['profilePhoto'];
+    this.contactAddress = mapData['contactAddress'];
+    this.referralLink = mapData['referralLink'];
+    this.phoneNo = mapData['phoneNo'];
   }
 }
