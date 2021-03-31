@@ -97,7 +97,6 @@ class AuthMethods {
     UserData user = UserData(
       uid: currentUser.uid,
       email: currentUser.email,
-      name: name,
       password: password,
       //profilePhoto: currentUser.photoUrl,
       username: username,
@@ -108,13 +107,20 @@ class AuthMethods {
 
   Future<void> updateDataInDb(
       {User currentUser, name, phoneNo, contactAddress, refLink}) async {
-    UserData user = UserData(
+    // UserData user = UserData(
+    //   name: name,
+    //   contactAddress: contactAddress,
+    //   phoneNo: phoneNo,
+    //   referralLink: refLink ?? "No Link",
+    //   infoFilled: true,
+    // );
+    //user details
+    firestore.collection("users").doc(currentUser.uid).update({
       name: name,
       contactAddress: contactAddress,
       phoneNo: phoneNo,
-      referralLink: refLink ?? "No Link",
-    );
-    //user details
-    firestore.collection("users").doc(currentUser.uid).update(user.toMap(user));
+      "referralLink": refLink ?? "No Link",
+      "infoFilled": true,
+    });
   }
 }

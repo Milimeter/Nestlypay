@@ -8,6 +8,7 @@ class UserData {
   String contactAddress;
   String referralLink;
   String phoneNo;
+  bool infoFilled;
 
   UserData({
     this.uid,
@@ -19,6 +20,7 @@ class UserData {
     this.contactAddress,
     this.referralLink,
     this.phoneNo,
+    this.infoFilled,
   });
 
   Map toMap(UserData user) {
@@ -32,6 +34,7 @@ class UserData {
     data['contactAddress'] = user.contactAddress;
     data['referralLink'] = user.referralLink;
     data['phoneNo'] = user.phoneNo;
+    data['infoFilled'] = user.infoFilled;
 
     return data;
   }
@@ -47,5 +50,6 @@ class UserData {
     this.contactAddress = mapData['contactAddress'];
     this.referralLink = mapData['referralLink'];
     this.phoneNo = mapData['phoneNo'];
+    this.infoFilled = mapData['infoFilled'];
   }
 }

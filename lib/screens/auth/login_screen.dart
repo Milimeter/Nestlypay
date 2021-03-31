@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +12,6 @@ import 'package:investment_app/screens/main_screens/control/admin2.dart';
 import 'package:investment_app/screens/main_screens/main_intro.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:investment_app/utils/custom_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -82,25 +84,54 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _checkEmailVerification() async {
     _isEmailVerified = await authMethods.isEmailVerified();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (!_isEmailVerified) {
       _showVerifyEmailDialog();
     } else {
-      bool dataAdded = prefs.getBool("addedData") == null ||
-              prefs.getBool("addedData") == false
-          ? false
-          : true;
-      if (dataAdded) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-            (Route<dynamic> route) => false);
-      } else {
-        Navigator.pushAndRemoveUntil(
+      // bool dataAdded = prefs.getBool("addedData") == null ||
+      //         prefs.getBool("addedData") == false
+      //     ? false
+      //     : true;
+      // if (dataAdded) {
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => HomeScreen()),
+      //       (Route<dynamic> route) => false);
+      // } else {
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => MainIntro()),
+        //     (Route<dynamic> route) => false);
+      // }
+       var id = await authMethods.getCurrentUser();
+   id != null ? FirebaseFirestore.instance
+        .collection("users")
+        .doc(id.uid)
+        .get()
+        .then((snapshot) {
+      if (snapshot.exists) {
+        bool filled = snapshot.data()['infoFilled'];
+        if (filled == true) {
+          Timer(
+            Duration(seconds: 2),
+            () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            ),
+          );
+        } else {
+          Timer(
+              Duration(seconds: 6),
+              () => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MainIntro()),
-            (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false));
+        }
       }
+    }): Timer(
+              Duration(seconds: 6),
+              () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainIntro()),
+                  ));
     }
   }
 

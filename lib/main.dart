@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,13 @@ import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
 import 'package:investment_app/screens/home_screen.dart';
+import 'package:investment_app/screens/main_screens/main_intro.dart';
 import 'package:investment_app/screens/misc/intro_screen.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(
@@ -62,12 +63,46 @@ class _SplashScreenState extends State<SplashScreen> {
                   MaterialPageRoute(builder: (context) => LoginScreen()),
                 ));
       } else {
-        Timer(
-          Duration(seconds: 4),
-          () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          ),
-        );
+        var id = await authMethods.getCurrentUser();
+        id != null
+            ? FirebaseFirestore.instance
+                .collection("users")
+                .doc(id.uid)
+                .get()
+                .then((snapshot) {
+                if (snapshot.exists) {
+                  bool filled = snapshot.data()['infoFilled'];
+                  if (filled == true) {
+                    Timer(
+                      Duration(seconds: 2),
+                      () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      ),
+                    );
+                  } else {
+                    Timer(
+                        Duration(seconds: 6),
+                        () => Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MainIntro()),
+                            (Route<dynamic> route) => false));
+                  }
+                }
+              })
+            : Timer(
+                Duration(seconds: 6),
+                () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainIntro()),
+                    ));
+
+        // Timer(
+        //   Duration(seconds: 4),
+        //   () => Navigator.of(context).pushReplacement(
+        //     MaterialPageRoute(builder: (context) => HomeScreen()),
+        //   ),
+        // );
       }
 
       // Timer(Duration(seconds: 4), () {

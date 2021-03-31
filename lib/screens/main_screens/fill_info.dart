@@ -6,7 +6,6 @@ import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/home_screen.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:investment_app/utils/custom_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FillInfo extends StatefulWidget {
   @override
@@ -50,6 +49,7 @@ class _FillInfoState extends State<FillInfo> {
         print("auth started2");
 
         //FirebaseUser user = await _auth.currentUser;
+        print("updating data");
         await authMethods.updateDataInDb(
           currentUser: currentUser,
           name: _fullNametextEditingController.text.trim(),
@@ -60,13 +60,14 @@ class _FillInfoState extends State<FillInfo> {
         print("updated data");
 
         String userId = currentUser.uid;
-        await save('addedData', true);
+        print('Signed up user: $userId');
+        
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
 
-        print('Signed up user: $userId');
+       
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -94,20 +95,7 @@ class _FillInfoState extends State<FillInfo> {
     }
   }
 
-  save(String key, dynamic value) async {
-    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-    if (value is bool) {
-      sharedPrefs.setBool(key, value);
-    } else if (value is String) {
-      sharedPrefs.setString(key, value);
-    } else if (value is int) {
-      sharedPrefs.setInt(key, value);
-    } else if (value is double) {
-      sharedPrefs.setDouble(key, value);
-    } else if (value is List<String>) {
-      sharedPrefs.setStringList(key, value);
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
