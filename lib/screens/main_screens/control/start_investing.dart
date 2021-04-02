@@ -6,6 +6,9 @@ import 'package:investment_app/screens/main_screens/control/support.dart';
 import 'package:investment_app/utils/colors.dart';
 
 class StartInvesting extends StatefulWidget {
+  final String amount;
+
+  const StartInvesting({Key key, this.amount}) : super(key: key);
   @override
   _StartInvestingState createState() => _StartInvestingState();
 }
@@ -80,13 +83,15 @@ class _StartInvestingState extends State<StartInvesting> {
                     child: GestureDetector(
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PayWithCard()),
+                        MaterialPageRoute(builder: (context) => PayWithCard(amount: widget.amount)),
                       ),
-                      child: AutoSizeText("Pay with Card",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      child: Container(
+                        child: AutoSizeText("Pay with Card",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
                     )),
                 SizedBox(height: 20),
                 GestureDetector(

@@ -43,6 +43,9 @@ dependencies:
   firebase_core: ^0.5.0
   get: ^3.10.2
   provider:
+  intl:
+  geocoding: ^1.0.5
+  geolocator: ^6.1.1
 
 
 dev_dependencies:

@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AutoSizeText(
-                    "N10,930",
+                    "₦0",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 25,
@@ -205,7 +205,7 @@ class _HomeState extends State<Home> {
                         color2: Colors.yellow,
                         image: "assets/images/dollar.png",
                         title: "Gold",
-                        subtitle: "50% return",
+                        subtitle: "30% return",
                       ),
                       SizedBox(width: 20),
                       plansWidget(
@@ -213,7 +213,7 @@ class _HomeState extends State<Home> {
                         color2: Colors.green[600],
                         image: "assets/images/euro.png",
                         title: "Silver",
-                        subtitle: "50% return",
+                        subtitle: "30% return",
                       ),
                       SizedBox(width: 10),
                       plansWidget(
@@ -221,7 +221,7 @@ class _HomeState extends State<Home> {
                         color2: Colors.blue[900],
                         image: "assets/images/platinum.png",
                         title: "Platinum",
-                        subtitle: "50% return",
+                        subtitle: "30% return",
                       ),
                     ],
                   ),

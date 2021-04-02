@@ -96,7 +96,7 @@ class _ChoosePlanBState extends State<ChoosePlanB> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StartInvesting())),
+                            builder: (context) => StartInvesting(amount: "500,000"))),
                     child: holder(
                       icon: LineIcons.mobilePhone,
                       text1: "₦500,000",
@@ -110,7 +110,7 @@ class _ChoosePlanBState extends State<ChoosePlanB> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StartInvesting())),
+                            builder: (context) => StartInvesting(amount: "1,000,000"))),
                     child: holder(
                       icon: LineIcons.home,
                       text1: "₦1,000,000",
@@ -124,7 +124,7 @@ class _ChoosePlanBState extends State<ChoosePlanB> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StartInvesting())),
+                            builder: (context) => StartInvesting(amount: "2,000,000"))),
                     child: holder(
                       icon: LineIcons.crown,
                       text1: "₦2,000,000",

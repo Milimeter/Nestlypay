@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:investment_app/models/users.dart';
 import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/resources/auth_methods.dart';
@@ -19,7 +20,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   AuthMethods authMethods = AuthMethods();
-  Widget profileContainer(String name) => Container(
+  Widget profileContainer({String name, String phoneNumber}) => Container(
         height: MediaQuery.of(context).size.height * 0.12,
         decoration: BoxDecoration(
             color: Colors.blue[800], borderRadius: BorderRadius.circular(35)),
@@ -35,7 +36,6 @@ class _SettingsState extends State<Settings> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 23,
               ),
             ),
             subtitle: AutoSizeText(
@@ -92,7 +92,6 @@ class _SettingsState extends State<Settings> {
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (Route<dynamic> route) => false);
-   
   }
 
   @override
@@ -105,20 +104,20 @@ class _SettingsState extends State<Settings> {
         elevation: 0.0,
         centerTitle: true,
         backgroundColor: UniversalColors.whiteColor,
-        leading: Container(
-          margin: EdgeInsets.only(left: 9),
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.blue[100],
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.blue[800]),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        title: AutoSizeText("27 March 2021",
+        // leading: Container(
+        //   margin: EdgeInsets.only(left: 9),
+        //   width: 50,
+        //   height: 50,
+        //   decoration: BoxDecoration(
+        //     color: Colors.blue[100],
+        //     shape: BoxShape.circle,
+        //   ),
+        //   child: IconButton(
+        //     icon: Icon(Icons.arrow_back, color: Colors.blue[800]),
+        //     onPressed: () => Navigator.pop(context),
+        //   ),
+        // ),
+        title: AutoSizeText(DateFormat("yyyy-MM-dd").format(DateTime.now()),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -132,13 +131,17 @@ class _SettingsState extends State<Settings> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                profileContainer(user.name),
+                profileContainer(
+                  name: user.name,
+                  phoneNumber: user.phoneNo,
+                ),
                 SizedBox(height: 25),
                 listCard(
                   icon: Icons.inbox,
                   title: "Personal Info",
                   onTap: personalInfo,
                 ),
+                SizedBox(height: 20),
                 listCard(icon: LineIcons.wallet, title: "Investment Wallet"),
                 SizedBox(height: 20),
                 listCard(

@@ -92,6 +92,88 @@ class _WalletPageState extends State<WalletPage> {
         ),
       );
 
+      Widget noPayout() => Container(
+        padding: EdgeInsets.all(8),
+        height: 200,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(9),
+          gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Colors.blueGrey,
+                Colors.orange,
+              ]),
+        ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Image.asset("assets/images/eurofull.png"),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ListTile(
+                  title: AutoSizeText(
+                    "Garnet",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: AutoSizeText(
+                    "₦0",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  trailing: Icon(
+                    Icons.more_horiz,
+                    color: Colors.white,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+                        "No Plans",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Column(
+                        children: [
+                          AutoSizeText(
+                            "Payout",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          AutoSizeText(
+                            "₦0",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      );
+
   Widget refBonus() => Container(
         padding: EdgeInsets.all(8),
         height: 120,
@@ -124,7 +206,7 @@ class _WalletPageState extends State<WalletPage> {
               ),
               SizedBox(height: 10),
               AutoSizeText(
-                "N3,950",
+                "₦0",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -179,7 +261,7 @@ class _WalletPageState extends State<WalletPage> {
               ),
             ),
             AutoSizeText(
-              "N153,950",
+              "₦0",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 28,

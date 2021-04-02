@@ -155,7 +155,7 @@ class _PlansState extends State<Plans> {
                       ),
                       SizedBox(height: 15),
                       AutoSizeText(
-                        "50,000",
+                        "100,000",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 25,

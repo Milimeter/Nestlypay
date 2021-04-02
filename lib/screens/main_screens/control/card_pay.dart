@@ -5,6 +5,9 @@ import 'package:investment_app/screens/main_screens/control/top_up_card.dart';
 import 'package:investment_app/utils/colors.dart';
 
 class PayWithCard extends StatefulWidget {
+  final String amount;
+
+  const PayWithCard({Key key, this.amount}) : super(key: key);
   @override
   _PayWithCardState createState() => _PayWithCardState();
 }
@@ -114,7 +117,7 @@ class _PayWithCardState extends State<PayWithCard> {
                     },
                     child: box(
                       color: Colors.blue,
-                      text: "Pay 200,000",
+                      text: "Pay ₦${widget.amount}",
                     ),
                   ),
                 ],

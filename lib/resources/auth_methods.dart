@@ -116,9 +116,9 @@ class AuthMethods {
     // );
     //user details
     firestore.collection("users").doc(currentUser.uid).update({
-      name: name,
-      contactAddress: contactAddress,
-      phoneNo: phoneNo,
+      "name": name,
+      "contactAddress": contactAddress,
+      "phoneNo": phoneNo,
       "referralLink": refLink ?? "No Link",
       "infoFilled": true,
     });
