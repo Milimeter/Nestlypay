@@ -60,6 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         String userId = currentUser.uid;
+        //authMethods.signOut();
         _showVerifyEmailSentDialog();
         print('Signed up user: $userId');
       } catch (e) {
@@ -226,7 +227,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ? Icons.visibility
                                   : Icons.visibility_off)),
                           hintText: "Enter your password",
-                          helperText: "No more than 8 characters.",
+                          helperText: "No more than 14 characters.",
                           icon: Icon(Icons.lock),
                           labelText: "Password",
                           border: OutlineInputBorder(),

@@ -163,7 +163,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   SizedBox(height: 30),
                   box(
                     color: Colors.blue,
-                    text: "Next",
+                    text: "Save",
                   ),
                   // Align(
                   //   alignment: Alignment.bottomCenter,

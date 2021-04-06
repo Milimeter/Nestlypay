@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:investment_app/models/user_assets.dart';
 import 'package:investment_app/models/users.dart';
 
 class AuthMethods {
@@ -100,9 +101,19 @@ class AuthMethods {
       password: password,
       //profilePhoto: currentUser.photoUrl,
       username: username,
+      havePackages: false,
+    );
+    UserAssets userAssets = UserAssets(
+      uid: currentUser.uid,
+      assetBalance: 0,
+      referralBonus: 0,
+      currentPlans: [],
+      payout: 0
     );
     //user details
     firestore.collection("users").doc(currentUser.uid).set(user.toMap(user));
+    //user assets
+    firestore.collection("userAssets").doc(currentUser.uid).set(userAssets.toMap(userAssets));
   }
 
   Future<void> updateDataInDb(

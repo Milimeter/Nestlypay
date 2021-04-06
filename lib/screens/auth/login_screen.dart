@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   AuthMethods authMethods = AuthMethods();
   bool _isLoading = false;
   bool _isEmailVerified = false;
+  String errorMessage;
   @override
   dispose() {
     _passwordtextEditingController.clear();
@@ -62,21 +63,94 @@ class _LoginScreenState extends State<LoginScreen> {
         //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
 
         print('Signed up user: $userId');
-      } catch (e) {
-        print('Error: $e');
+      } catch (error) {
+        print('Error: $error');
         setState(() {
           _isLoading = false;
         });
-        Get.snackbar(
-          "Error!",
-          "${e.toString()}",
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.white,
-          colorText: Colors.black,
-          duration: Duration(seconds: 5),
-        );
+
+        switch (error.code) {
+          case "ERROR_INVALID_EMAIL":
+            errorMessage = "Your email address appears to be malformed.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+
+            break;
+          case "ERROR_WRONG_PASSWORD":
+            errorMessage = "Your password is wrong.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+            break;
+          case "ERROR_USER_NOT_FOUND":
+            errorMessage = "User with this email doesn't exist.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+            break;
+          case "ERROR_USER_DISABLED":
+            errorMessage = "User with this email has been disabled.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+            break;
+          case "ERROR_TOO_MANY_REQUESTS":
+            errorMessage = "Too many requests. Try again later.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+            break;
+          case "ERROR_OPERATION_NOT_ALLOWED":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+            return Get.snackbar(
+              "Error!",
+              errorMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.white,
+              colorText: Colors.black,
+              duration: Duration(seconds: 5),
+            );
+        }
       }
     }
+
     setState(() {
       _isLoading = false;
     });
@@ -97,36 +171,38 @@ class _LoginScreenState extends State<LoginScreen> {
       //       MaterialPageRoute(builder: (context) => HomeScreen()),
       //       (Route<dynamic> route) => false);
       // } else {
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => MainIntro()),
-        //     (Route<dynamic> route) => false);
+      // Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => MainIntro()),
+      //     (Route<dynamic> route) => false);
       // }
-       var id = await authMethods.getCurrentUser();
-   id != null ? FirebaseFirestore.instance
-        .collection("users")
-        .doc(id.uid)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        bool filled = snapshot.data()['infoFilled'];
-        if (filled == true) {
-          Timer(
-            Duration(seconds: 2),
-            () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            ),
-          );
-        } else {
-          Timer(
-              Duration(seconds: 6),
-              () => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MainIntro()),
-            (Route<dynamic> route) => false));
-        }
-      }
-    }): Timer(
+      var id = await authMethods.getCurrentUser();
+      id != null
+          ? FirebaseFirestore.instance
+              .collection("users")
+              .doc(id.uid)
+              .get()
+              .then((snapshot) {
+              if (snapshot.exists) {
+                bool filled = snapshot.data()['infoFilled'];
+                if (filled == true) {
+                  Timer(
+                    Duration(seconds: 2),
+                    () => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    ),
+                  );
+                } else {
+                  Timer(
+                      Duration(seconds: 6),
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainIntro()),
+                          (Route<dynamic> route) => false));
+                }
+              }
+            })
+          : Timer(
               Duration(seconds: 6),
               () => Navigator.pushReplacement(
                     context,
@@ -261,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ? Icons.visibility
                                       : Icons.visibility_off)),
                               hintText: "Enter your password",
-                              helperText: "No more than 8 characters.",
+                              helperText: "No more than 14 characters.",
                               icon: Icon(Icons.lock),
                               labelText: "Password",
                               border: OutlineInputBorder(),
@@ -287,7 +363,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 35.0),
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             validateAndSubmit();
                           },
                           // onTap: () => Navigator.push(

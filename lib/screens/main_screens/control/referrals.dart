@@ -59,14 +59,14 @@ class _ReferralPageState extends State<ReferralPage> {
                     "Your Referrals",
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 28,
+                      fontSize: 20,
                     ),
                   ),
                   trailing: AutoSizeText(
                     "0",
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 28,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -79,14 +79,14 @@ class _ReferralPageState extends State<ReferralPage> {
                     "Total Referral \n Earnings",
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 28,
+                      fontSize: 20,
                     ),
                   ),
                   trailing: AutoSizeText(
                     "0:00",
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 28,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -99,7 +99,7 @@ class _ReferralPageState extends State<ReferralPage> {
                   "You Earn 5% bonus on each\n referral investment",
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 28,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

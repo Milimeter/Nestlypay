@@ -39,7 +39,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             subtitle: AutoSizeText(
-              "Platinum plan \n\nCashout date 5/07/2021",
+              "$phoneNumber \n\nCashout date 5/07/2021",
               style: TextStyle(color: Colors.white),
             ),
             trailing: Container(

@@ -1,11 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_app/models/user_assets.dart';
 import 'package:investment_app/models/users.dart';
+import 'package:investment_app/provider/user_assets_provider.dart';
 import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/screens/main_screens/control/choose_plan.dart';
 import 'package:investment_app/screens/main_screens/control/create_post.dart';
+import 'package:investment_app/screens/main_screens/control/notification_page.dart';
+import 'package:investment_app/screens/main_screens/control/start_investing.dart';
 import 'package:investment_app/utils/colors.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +21,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   /// The widget that shows the wallet amount and "Invest Now" button
-  Widget assetBalance() => Container(
+  Widget assetBalance({int assetBalance}) => Container(
         padding: EdgeInsets.all(10),
         height: 100,
         width: MediaQuery.of(context).size.width * 0.80,
@@ -52,7 +58,7 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AutoSizeText(
-                    "₦0",
+                    "₦${assetBalance.toString()}",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 25,
@@ -88,7 +94,7 @@ class _HomeState extends State<Home> {
           Color color2,
           String title,
           String subtitle,
-          String image}) =>
+          IconData icon}) =>
       Container(
         height: 150,
         width: 120,
@@ -107,7 +113,11 @@ class _HomeState extends State<Home> {
           children: [
             Align(
               alignment: Alignment.bottomRight,
-              child: Image.asset(image, fit: BoxFit.fill),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 60,
+              ),
             ),
             Align(
               alignment: Alignment.topLeft,
@@ -142,9 +152,16 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    UserProvider userProvider = Provider.of<UserProvider>(context);
+    UserProvider userProvider = Provider.of<UserProvider>(
+      context,
+    );
+    UserAssetsProvider userAssetsProvider = Provider.of(
+      context,
+    );
     UserData user = userProvider.getUser;
+    UserAssets userAssets = userAssetsProvider.getAssets;
     var ns = user.name.split(" ");
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -159,9 +176,15 @@ class _HomeState extends State<Home> {
                   ),
               child: Image.asset("assets/images/vr.png")),
           SizedBox(width: 8),
-          Icon(
-            Icons.notifications_active_outlined,
-            color: Colors.black,
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationPage()),
+            ),
+            child: Icon(
+              Icons.notifications_active_outlined,
+              color: Colors.black,
+            ),
           ),
           SizedBox(width: 10),
         ],
@@ -174,7 +197,7 @@ class _HomeState extends State<Home> {
               AutoSizeText("Welcome ${ns[0]}",
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
-              assetBalance(),
+              assetBalance(assetBalance: userAssets.assetBalance),
               SizedBox(height: size.height * 0.10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,11 +209,17 @@ class _HomeState extends State<Home> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
-                  AutoSizeText("See All ->",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChoosePlan()),
+                    ),
+                    child: AutoSizeText("See All ->",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold)),
+                  ),
                 ],
               ),
               Padding(
@@ -200,28 +229,49 @@ class _HomeState extends State<Home> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      plansWidget(
-                        color1: Colors.yellow[900],
-                        color2: Colors.yellow,
-                        image: "assets/images/dollar.png",
-                        title: "Gold",
-                        subtitle: "30% return",
-                      ),
-                      SizedBox(width: 20),
-                      plansWidget(
-                        color1: Colors.grey,
-                        color2: Colors.green[600],
-                        image: "assets/images/euro.png",
-                        title: "Silver",
-                        subtitle: "30% return",
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    StartInvesting(amount: "20,000"))),
+                        child: plansWidget(
+                          color1: Colors.yellow[900],
+                          color2: Colors.yellow,
+                          icon: LineIcons.mobilePhone,
+                          title: "Coral",
+                          subtitle: "30% return",
+                        ),
                       ),
                       SizedBox(width: 10),
-                      plansWidget(
-                        color1: Colors.blue,
-                        color2: Colors.blue[900],
-                        image: "assets/images/platinum.png",
-                        title: "Platinum",
-                        subtitle: "30% return",
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    StartInvesting(amount: "50,000"))),
+                        child: plansWidget(
+                          color1: Colors.grey,
+                          color2: Colors.green[600],
+                          icon: LineIcons.home,
+                          title: "Pearl",
+                          subtitle: "30% return",
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    StartInvesting(amount: "100,000"))),
+                        child: plansWidget(
+                          color1: Colors.blue,
+                          color2: Colors.blue[900],
+                          icon: LineIcons.crown,
+                          title: "Garnet",
+                          subtitle: "30% return",
+                        ),
                       ),
                     ],
                   ),
@@ -230,16 +280,6 @@ class _HomeState extends State<Home> {
               AutoSizeText("Investment Guide",
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
               SizedBox(height: 10),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/pica.png"),
-                  backgroundColor: Colors.white,
-                  radius: 30,
-                ),
-                title: AutoSizeText("Basic Type of investments"),
-                subtitle: AutoSizeText(
-                    "This is how you set foot on your 2021 stock market recession"),
-              ),
               ListTile(
                 leading: CircleAvatar(
                   backgroundImage: AssetImage("assets/images/picb.png"),
@@ -253,7 +293,66 @@ class _HomeState extends State<Home> {
                 subtitle: AutoSizeText(
                   "What do you like to see? It is a very market from 2021",
                 ),
-              )
+              ),
+              StreamBuilder<QuerySnapshot>(
+                  // <2> Pass `Stream<QuerySnapshot>` to stream
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .orderBy("timeStamp", descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data.docs.length == 0) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/images/pica.png"),
+                                backgroundColor: Colors.white,
+                                radius: 30,
+                              ),
+                              title: AutoSizeText("Basic Type of investments"),
+                              subtitle: AutoSizeText(
+                                  "This is how you set foot on your 2021 stock market recession"),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return ListView.builder(
+                          itemCount: snapshot.data.docs.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            print(snapshot.data.docs[index].data());
+                            // return postThread(
+                            //   title: snapshot.data.docs[index].data()["Title"],
+                            //   description:
+                            //       snapshot.data.docs[index].data()["Description"],
+                            // );
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/images/picb.png"),
+                                backgroundColor: Colors.white,
+                                radius: 30,
+                              ),
+                              title: AutoSizeText(
+                                snapshot.data.docs[index].data()["Title"],
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              subtitle: AutoSizeText(
+                                snapshot.data.docs[index].data()["Description"],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
             ],
           ),
         ),

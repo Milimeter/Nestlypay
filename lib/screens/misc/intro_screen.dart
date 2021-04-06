@@ -62,7 +62,7 @@ class _IntroScreenState extends State<IntroScreen> {
         PageViewModel(
           title: "Invest Money",
           body:
-              "Invest automatically and we'll pay you up to 50% interest montly ",
+              "Invest automatically and we'll pay you up to 30% interest montly ",
           image: _buildImage('assets/images/c.png'),
           decoration: pageDecoration,
         ),

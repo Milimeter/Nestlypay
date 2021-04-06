@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:investment_app/provider/user_assets_provider.dart';
 import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/screens/main_screens/pageview/home.dart';
 import 'package:investment_app/screens/main_screens/pageview/people.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   UserProvider userProvider;
+  UserAssetsProvider userAssetsProvider;
 
   List<Widget> _widgetOptions = <Widget>[
     Home(),
@@ -29,8 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       userProvider = Provider.of<UserProvider>(context, listen: false);
+      userAssetsProvider =
+          Provider.of<UserAssetsProvider>(context, listen: false);
       await userProvider.refreshUser();
+      await userAssetsProvider.refreshAssets();
     });
+    // Future.delayed(Duration(seconds: 5), () {
+    //   setState(() {
+    //     print("aaaaaaaaa");
+    //   });
+    // });
   }
 
   @override

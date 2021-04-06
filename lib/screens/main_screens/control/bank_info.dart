@@ -103,7 +103,7 @@ class _BankInfoState extends State<BankInfo> {
             SizedBox(height: 30),
              box(
                   color: Colors.blue,
-                  text: "Next",
+                  text: "Save",
                 ),
 
             // Align(

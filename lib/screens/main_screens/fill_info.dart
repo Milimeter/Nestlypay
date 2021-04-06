@@ -62,7 +62,7 @@ class _FillInfoState extends State<FillInfo> {
         String userId = currentUser.uid;
         print('Signed up user: $userId');
         
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );

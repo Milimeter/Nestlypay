@@ -1,8 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:investment_app/models/user_assets.dart';
+import 'package:investment_app/models/users.dart';
+import 'package:investment_app/provider/user_assets_provider.dart';
+import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/screens/main_screens/control/see_all_plans.dart';
 import 'package:investment_app/screens/main_screens/control/withdraw.dart';
 import 'package:investment_app/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 class WalletPage extends StatefulWidget {
   @override
@@ -10,6 +18,42 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  List currentPlans = [];
+
+  void _getData() {
+    User currentUser;
+    currentUser = _auth.currentUser;
+    FirebaseFirestore.instance
+        .collection("userAssets")
+        .doc(currentUser.uid)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.exists) {
+        print("============user assets data==============");
+        print(querySnapshot.data());
+        //print(querySnapshot.data()["currentPlans"]);
+        List currentUserPlans = querySnapshot.data()["currentPlans"];
+        print("============user plans==============");
+        print(currentUserPlans);
+        print(currentUserPlans[0]);
+        print(currentUserPlans[1]);
+
+        for (var i in currentUserPlans) {
+          currentPlans.add(i);
+        }
+        // currentPlans.add(currentUserPlans);
+        print(currentPlans);
+        setState(() {
+          // ignore: unnecessary_statements
+          currentPlans;
+        });
+      }
+    });
+  }
+
+  
+
   Widget payout() => Container(
         padding: EdgeInsets.all(8),
         height: 200,
@@ -92,7 +136,7 @@ class _WalletPageState extends State<WalletPage> {
         ),
       );
 
-      Widget noPayout() => Container(
+  Widget noPayout() => Container(
         padding: EdgeInsets.all(8),
         height: 200,
         width: MediaQuery.of(context).size.width,
@@ -120,7 +164,7 @@ class _WalletPageState extends State<WalletPage> {
               children: [
                 ListTile(
                   title: AutoSizeText(
-                    "Garnet",
+                    "No Package",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -174,7 +218,7 @@ class _WalletPageState extends State<WalletPage> {
         ),
       );
 
-  Widget refBonus() => Container(
+  Widget refBonus({int refBonus}) => Container(
         padding: EdgeInsets.all(8),
         height: 120,
         width: MediaQuery.of(context).size.width,
@@ -206,7 +250,7 @@ class _WalletPageState extends State<WalletPage> {
               ),
               SizedBox(height: 10),
               AutoSizeText(
-                "₦0",
+                "₦${refBonus.toString()}",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -233,9 +277,24 @@ class _WalletPageState extends State<WalletPage> {
           ),
         )),
       );
+
+  @override
+  void initState() {
+    _getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    UserAssetsProvider userAssetsProvider =
+        Provider.of<UserAssetsProvider>(context, listen: false);
+    UserAssets userAssets = userAssetsProvider.getAssets;
+    UserData user = userProvider.getUser;
     var size = MediaQuery.of(context).size;
+    print("=========inside build function===========");
+    print(currentPlans);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -261,7 +320,7 @@ class _WalletPageState extends State<WalletPage> {
               ),
             ),
             AutoSizeText(
-              "₦0",
+              "₦${userAssets.assetBalance.toString()}",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 28,
@@ -278,23 +337,42 @@ class _WalletPageState extends State<WalletPage> {
               ),
             ),
             SizedBox(height: size.height * 0.04),
-            payout(),
+            user.havePackages ? payout() : noPayout(),
             SizedBox(height: 15),
-            refBonus(),
+            refBonus(refBonus: userAssets.referralBonus),
             SizedBox(height: size.height * 0.10),
             GestureDetector(
-                onTap: () => Navigator.push(
+                onTap: () {
+                  if (currentPlans.length == 0) {
+                    return Get.snackbar(
+                      "No Plans Detected!",
+                      "You Currently have no plans at the moment",
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: Colors.white,
+                      colorText: Colors.black,
+                      duration: Duration(seconds: 5),
+                    );
+                  } else {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => WithdrawMoney()),
-                    ),
+                    );
+                  }
+                },
                 child: withdraw()),
             SizedBox(height: 18),
             Center(
               child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Plans()),
-                ),
+                onTap: () {
+                  if (currentPlans != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Plans(currentPlans: currentPlans)),
+                    );
+                  }
+                },
                 child: AutoSizeText(
                   "See all plans ->",
                   style: TextStyle(
