@@ -46,6 +46,8 @@ dependencies:
   intl:
   geocoding: ^1.0.5
   geolocator: ^6.1.1
+  flutterwave: ^0.0.2
+
 
 
 dev_dependencies:

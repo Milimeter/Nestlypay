@@ -96,11 +96,15 @@ class _ChoosePlanBState extends State<ChoosePlanB> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StartInvesting(amount: "500,000"))),
+                            builder: (context) => StartInvesting(
+                                  amount: "500000",
+                                  currentPlan: "Emerald",
+                                  payout: "650000",
+                                ))),
                     child: holder(
                       icon: LineIcons.mobilePhone,
                       text1: "₦500,000",
-                      text2: "Interest ₦30% 650,000",
+                      text2: "Interest 30% ₦650,000",
                       text3: "Emerald",
                       color: Colors.blue[800],
                     ),
@@ -110,7 +114,11 @@ class _ChoosePlanBState extends State<ChoosePlanB> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StartInvesting(amount: "1,000,000"))),
+                            builder: (context) => StartInvesting(
+                                  amount: "1,000,000",
+                                  currentPlan: "Ruby",
+                                  payout: "1300000",
+                                ))),
                     child: holder(
                       icon: LineIcons.home,
                       text1: "₦1,000,000",
@@ -124,7 +132,11 @@ class _ChoosePlanBState extends State<ChoosePlanB> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StartInvesting(amount: "2,000,000"))),
+                            builder: (context) => StartInvesting(
+                                  amount: "2000000",
+                                  currentPlan: "Diamond",
+                                  payout: "2600000",
+                                ))),
                     child: holder(
                       icon: LineIcons.crown,
                       text1: "₦2,000,000",

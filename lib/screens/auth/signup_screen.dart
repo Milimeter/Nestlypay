@@ -227,7 +227,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ? Icons.visibility
                                   : Icons.visibility_off)),
                           hintText: "Enter your password",
-                          helperText: "No more than 14 characters.",
+                          helperText: "No more than 14 characters.", 
                           icon: Icon(Icons.lock),
                           labelText: "Password",
                           border: OutlineInputBorder(),

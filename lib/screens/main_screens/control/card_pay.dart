@@ -6,8 +6,12 @@ import 'package:investment_app/utils/colors.dart';
 
 class PayWithCard extends StatefulWidget {
   final String amount;
+  final String currentPlan;
+  final String payout;
 
-  const PayWithCard({Key key, this.amount}) : super(key: key);
+  const PayWithCard({Key key, this.amount, this.currentPlan, this.payout})
+      : super(key: key);
+
   @override
   _PayWithCardState createState() => _PayWithCardState();
 }
@@ -54,7 +58,7 @@ class _PayWithCardState extends State<PayWithCard> {
           elevation: 0.0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: (){
+            onPressed: () {
               Navigator.pop(context);
             },
           )),
@@ -112,7 +116,12 @@ class _PayWithCardState extends State<PayWithCard> {
                       }
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TopUpCard()),
+                        MaterialPageRoute(
+                            builder: (context) => TopUpCard(
+                                  amount: widget.amount,
+                                  currentPlan: widget.currentPlan,
+                                  payout: widget.payout,
+                                )),
                       );
                     },
                     child: box(

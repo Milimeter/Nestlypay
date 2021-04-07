@@ -233,8 +233,11 @@ class _HomeState extends State<Home> {
                         onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    StartInvesting(amount: "20,000"))),
+                                builder: (context) => StartInvesting(
+                                      amount: "20000",
+                                      currentPlan: "Coral",
+                                      payout: "26000",
+                                    ))),
                         child: plansWidget(
                           color1: Colors.yellow[900],
                           color2: Colors.yellow,
@@ -248,8 +251,11 @@ class _HomeState extends State<Home> {
                         onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    StartInvesting(amount: "50,000"))),
+                                builder: (context) => StartInvesting(
+                                      amount: "50000",
+                                      currentPlan: "Pearl",
+                                      payout: "65000",
+                                    ))),
                         child: plansWidget(
                           color1: Colors.grey,
                           color2: Colors.green[600],
@@ -263,8 +269,11 @@ class _HomeState extends State<Home> {
                         onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    StartInvesting(amount: "100,000"))),
+                                builder: (context) => StartInvesting(
+                                      amount: "100000",
+                                      currentPlan: "Garnet",
+                                      payout: "130000",
+                                    ))),
                         child: plansWidget(
                           color1: Colors.blue,
                           color2: Colors.blue[900],
@@ -280,20 +289,6 @@ class _HomeState extends State<Home> {
               AutoSizeText("Investment Guide",
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
               SizedBox(height: 10),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/picb.png"),
-                  backgroundColor: Colors.white,
-                  radius: 30,
-                ),
-                title: AutoSizeText(
-                  "How much can you start with",
-                  style: TextStyle(color: Colors.black),
-                ),
-                subtitle: AutoSizeText(
-                  "What do you like to see? It is a very market from 2021",
-                ),
-              ),
               StreamBuilder<QuerySnapshot>(
                   // <2> Pass `Stream<QuerySnapshot>` to stream
                   stream: FirebaseFirestore.instance
@@ -305,6 +300,22 @@ class _HomeState extends State<Home> {
                       if (snapshot.data.docs.length == 0) {
                         return Column(
                           children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/images/picb.png"),
+                                backgroundColor: Colors.white,
+                                radius: 30,
+                              ),
+                              title: AutoSizeText(
+                                "How much can you start with",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              subtitle: AutoSizeText(
+                                "What do you like to see? It is a very market from 2021",
+                              ),
+                            ),
+                            SizedBox(height: 10),
                             ListTile(
                               leading: CircleAvatar(
                                 backgroundImage:
