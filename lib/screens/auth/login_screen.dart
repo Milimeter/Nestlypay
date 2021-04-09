@@ -8,7 +8,6 @@ import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/forgot_password.dart';
 import 'package:investment_app/screens/auth/signup_screen.dart';
 import 'package:investment_app/screens/home_screen.dart';
-import 'package:investment_app/screens/main_screens/control/admin2.dart';
 import 'package:investment_app/screens/main_screens/main_intro.dart';
 import 'package:investment_app/utils/colors.dart';
 import 'package:investment_app/utils/custom_button.dart';
@@ -407,26 +406,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      Container(
-                          alignment: Alignment.center,
-                          child: Text("-------- or Login with --------")),
-                      SizedBox(height: 15),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 35.0),
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AdminTwo())),
-                          child: CustomButton(
-                            label: 'Login as Admin',
-                            labelColour: Colors.blue,
-                            backgroundColour: UniversalColors.whiteColor,
-                            shadowColour:
-                                UniversalColors.blueColor.withOpacity(0.16),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

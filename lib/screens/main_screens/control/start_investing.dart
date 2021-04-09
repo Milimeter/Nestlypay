@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:investment_app/screens/main_screens/control/card_pay.dart';
+import 'package:get/get.dart';
 import 'package:investment_app/screens/main_screens/control/start_investing2.dart';
-import 'package:investment_app/screens/main_screens/control/support.dart';
+import 'package:investment_app/screens/main_screens/control/top_up_card.dart';
 import 'package:investment_app/utils/colors.dart';
 
 class StartInvesting extends StatefulWidget {
@@ -84,17 +84,18 @@ class _StartInvestingState extends State<StartInvesting> {
                 Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PayWithCard(
-                                  amount: widget.amount,
-                                  currentPlan: widget.currentPlan,
-                                  payout: widget.payout,
-                                )),
-                      ),
+                      onTap: () {
+                        Get.snackbar(
+                          "Error!",
+                          "Feature not Available Yet",
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: Colors.white,
+                          colorText: Colors.black,
+                          duration: Duration(seconds: 5),
+                        );
+                      },
                       child: Container(
-                        child: AutoSizeText("Pay with Card",
+                        child: AutoSizeText("Buy Coupon",
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -103,11 +104,25 @@ class _StartInvestingState extends State<StartInvesting> {
                     )),
                 SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StartInvestingTwo()),
-                  ),
+                  onTap: () {
+                    if (_textEditingController.text == "12345678" &&
+                        _textEditingController.text != "") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StartInvestingTwo()),
+                      );
+                    } else {
+                      Get.snackbar(
+                        "Error!",
+                        "Input Error",
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.white,
+                        colorText: Colors.black,
+                        duration: Duration(seconds: 5),
+                      );
+                    }
+                  },
                   child: box(
                     color: Colors.blue,
                     text: "Start Investing",
@@ -116,11 +131,16 @@ class _StartInvestingState extends State<StartInvesting> {
                 GestureDetector(
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SupportPage()),
+                    MaterialPageRoute(
+                        builder: (context) => TopUpCard(
+                              amount: widget.amount,
+                              currentPlan: widget.currentPlan,
+                              payout: widget.payout,
+                            )),
                   ),
                   child: box(
                     color: Colors.deepPurple,
-                    text: "Buy Coupon",
+                    text: "Pay with Card",
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:investment_app/models/user_packages.dart';
 import 'package:investment_app/models/user_payments.dart';
 
 class PaymentMethods {
@@ -29,11 +30,28 @@ class PaymentMethods {
       payoutDate: payoutDate,
       visiblePaidDate: DateTime.now(),
       visiblePayoutDate: DateTime.now().add(Duration(days: 31)),
+    ); 
+    //set user packages
+    UserPackages userPackages = UserPackages(
+      uid: currentUser.uid,
+      amountPaid: amountPaid,
+      paidDate: paidDate,
+      currentPlan: currentPlan,
+      payout: payout,
+      payoutDate: payoutDate,
+      visiblePaidDate: DateTime.now(),
+      visiblePayoutDate: DateTime.now().add(Duration(days: 31)),
+      timeStamp: DateTime.now(),
     );
     firestore
         .collection("userPayments")
-        .doc(currentUser.uid)
+        .doc()
         .set(userPayments.toMap(userPayments));
+
+    firestore
+        .collection("userPackages")
+        .doc()
+        .set(userPackages.toMap(userPackages));
   }
 
   Future<void> updateUserAssets({String planType, int userAssetBalance}) async {
@@ -42,12 +60,13 @@ class PaymentMethods {
         .collection("userAssets")
         .doc(currentUser.uid)
         .update({
-          "currentPlans": FieldValue.arrayUnion([planType])
-        });
-    
-    FirebaseFirestore.instance.collection("userAssets").doc().update({
-          "assetBalance": userAssetBalance,
-        });
+      "currentPlans": FieldValue.arrayUnion([planType]),
+      "assetBalance": userAssetBalance,
+    });
+
+    // FirebaseFirestore.instance.collection("userAssets").doc().update({
+    //       "assetBalance": userAssetBalance,
+    //     });
   }
 
   // Future<void> setUserLoggedInState(){
@@ -67,8 +86,6 @@ class PaymentMethods {
   //   }
 
   // }
-
-
 
   // Future<bool> checkIfUserIsLoggedIn(uid){
 

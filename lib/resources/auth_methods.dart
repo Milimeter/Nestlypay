@@ -102,22 +102,32 @@ class AuthMethods {
       //profilePhoto: currentUser.photoUrl,
       username: username,
       havePackages: false,
+      isAdmin: false,
     );
     UserAssets userAssets = UserAssets(
-      uid: currentUser.uid,
-      assetBalance: 0,
-      referralBonus: 0,
-      currentPlans: [],
-      payout: 0
-    );
+        uid: currentUser.uid,
+        assetBalance: 0,
+        referralBonus: 0,
+        currentPlans: [],
+        payout: 0);
     //user details
     firestore.collection("users").doc(currentUser.uid).set(user.toMap(user));
     //user assets
-    firestore.collection("userAssets").doc(currentUser.uid).set(userAssets.toMap(userAssets));
+    firestore
+        .collection("userAssets")
+        .doc(currentUser.uid)
+        .set(userAssets.toMap(userAssets));
   }
 
   Future<void> updateDataInDb(
-      {User currentUser, name, phoneNo, contactAddress, refLink}) async {
+      {User currentUser,
+      name,
+      phoneNo,
+      contactAddress,
+      refLink,
+      bankName,
+      accountName,
+      accountNumber}) async {
     // UserData user = UserData(
     //   name: name,
     //   contactAddress: contactAddress,
@@ -132,6 +142,17 @@ class AuthMethods {
       "phoneNo": phoneNo,
       "referralLink": refLink ?? "No Link",
       "infoFilled": true,
+    });
+  }
+
+  Future<void> updateBankDataInDb(
+      {User currentUser, bankName, accountName, accountNumber}) async {
+    
+    //update user details
+    firestore.collection("users").doc(currentUser.uid).update({
+      "accountName": accountName,
+      "accountNumber": accountNumber,
+      "bankName": bankName,
     });
   }
 }

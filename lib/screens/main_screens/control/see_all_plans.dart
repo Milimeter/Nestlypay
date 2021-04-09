@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:investment_app/models/users.dart';
 import 'package:investment_app/provider/user_provider.dart';
@@ -16,7 +17,6 @@ class Plans extends StatefulWidget {
 }
 
 class _PlansState extends State<Plans> {
-  ///TODO: When you create a plan, your entire plan details save to firesore and retrieved here to display in a stream
   // Widget plansList(){
   //   for( var plansName in widget.currentPlans){
   //     switch(plansName){
@@ -26,229 +26,111 @@ class _PlansState extends State<Plans> {
   //     }
   //   }
   // }
-
-  Widget planList() {
-    return ListView(
-        // children: widget.currentPlans
-        //     .map((plans) => Card(
-        //           child: ListTile(
-        //             title: Text(plans['text']),
-        //             subtitle: Text(plans['email']),
-        //           ),
-        //         ))
-        //     .toList());
-        children: widget.currentPlans
-            .map((plans) => Container(
-                  padding: EdgeInsets.all(8),
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.blue[900],
-                          Colors.blue[300],
-                          Colors.blue[900],
-                        ]),
+  Widget plansList({String plan, String fullName, String payoutAmount}) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      height: 200,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.blue[900],
+              Colors.blue[300],
+              Colors.blue[900],
+            ]),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AutoSizeText(
+                  "Visa",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AutoSizeText(
-                              "Visa",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                AutoSizeText(
-                                  plans,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 15),
-                                AutoSizeText(
-                                  "50,000",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Icon(LineIcons.creditCardAlt, color: Colors.white)
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                AutoSizeText(
-                                  ". . . .",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                AutoSizeText(
-                                  ". . . .",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                AutoSizeText(
-                                  ". . . .",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                AutoSizeText(
-                                  "2 4 5 7",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: AutoSizeText(
-                                "Charles Emmaah",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ))
-            .toList());
-  }
-
-  Widget goldPlans() => Container(
-        padding: EdgeInsets.all(8),
-        height: 200,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.blue[900],
-                Colors.blue[300],
-                Colors.blue[900],
-              ]),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AutoSizeText(
-                    "Visa",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      AutoSizeText(
-                        "Gold",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      AutoSizeText(
-                        "50,000",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Icon(LineIcons.creditCardAlt, color: Colors.white)
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      AutoSizeText(
-                        ". . . .",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      AutoSizeText(
-                        ". . . .",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      AutoSizeText(
-                        ". . . .",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      AutoSizeText(
-                        "2 4 5 7",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: AutoSizeText(
-                      "Charles Emmaah",
+                ),
+                Column(
+                  children: [
+                    AutoSizeText(
+                      plan,
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(height: 15),
+                    AutoSizeText(
+                      payoutAmount,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Icon(LineIcons.creditCardAlt, color: Colors.white)
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AutoSizeText(
+                      ". . . .",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    AutoSizeText(
+                      ". . . .",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    AutoSizeText(
+                      ". . . .",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    AutoSizeText(
+                      "2 4 5 7",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: AutoSizeText(
+                    fullName,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget rubyPlans() => Container(
         padding: EdgeInsets.all(8),
         height: 200,
@@ -414,52 +296,86 @@ class _PlansState extends State<Plans> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: SingleChildScrollView(
-          child: user.havePackages == true && widget.currentPlans.length != 0
-              ? Column(
-                  children: [
-                    goldPlans(),
-                    SizedBox(height: 20),
-                    rubyPlans(),
-                    SizedBox(height: 20),
-                    goldPlans(),
-                    SizedBox(height: 20),
-                    GestureDetector(
-                        onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChoosePlan()),
-                            ),
-                        child: getNewPackage())
-                  ],
-                )
-              : Column(children: [
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.center,
-                    child:
-                        Image.asset("assets/images/noPackages.png", width: 200),
-                  ),
-                  SizedBox(height: 20),
-                  AutoSizeText(
-                    "No Packages Yet!",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 15,
-                    ),
-                  ),
-                  SizedBox(height: 25),
-                  GestureDetector(
-                      onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChoosePlan()),
+        child: Column(
+          children: [
+            StreamBuilder<QuerySnapshot>(
+                // <2> Pass `Stream<QuerySnapshot>` to stream
+                stream: FirebaseFirestore.instance
+                    .collection('userPackages')
+                    .where("uid", isEqualTo: user.uid)
+                    .orderBy("timeStamp", descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.docs.length == 0) {
+                      return Column(children: [
+                        SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Image.asset("assets/images/noPackages.png",
+                              width: 200),
+                        ),
+                        SizedBox(height: 20),
+                        AutoSizeText(
+                          "No Packages Yet!",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15,
                           ),
-                      child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: getNewPackage()))
-                ]),
+                        ),
+                        SizedBox(height: 25),
+                        // GestureDetector(
+                        //   onTap: () => Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => ChoosePlan()),
+                        //   ),
+                        //   child: Align(
+                        //     alignment: Alignment.bottomCenter,
+                        //     child: getNewPackage(),
+                        //   ),
+                        // )
+                      ]);
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          print(snapshot.data.docs[index].data());
+                          // return postThread(
+                          //   title: snapshot.data.docs[index].data()["Title"],
+                          //   description:
+                          //       snapshot.data.docs[index].data()["Description"],
+                          // );
+                          return plansList(
+                            plan:
+                                snapshot.data.docs[index].data()["currentPlan"],
+                            payoutAmount:
+                                snapshot.data.docs[index].data()["payout"],
+                            fullName: user.name,
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+            SizedBox(height: 25),
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChoosePlan()),
+              ),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: getNewPackage(),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:investment_app/models/user_assets.dart';
 import 'package:investment_app/models/users.dart';
 import 'package:investment_app/provider/user_assets_provider.dart';
 import 'package:investment_app/provider/user_provider.dart';
+import 'package:investment_app/screens/main_screens/control/admin2.dart';
 import 'package:investment_app/screens/main_screens/control/choose_plan.dart';
 import 'package:investment_app/screens/main_screens/control/create_post.dart';
 import 'package:investment_app/screens/main_screens/control/notification_page.dart';
@@ -166,8 +167,14 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: UniversalColors.whiteColor,
-        leading: IconButton(
-            icon: Icon(Icons.menu, color: Colors.black), onPressed: () {}),
+        leading: user.isAdmin != null && user.isAdmin
+            ? IconButton(
+                icon: Icon(Icons.menu, color: Colors.black),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AdminTwo()));
+                })
+            : SizedBox(),
         actions: [
           GestureDetector(
               onTap: () => Navigator.push(

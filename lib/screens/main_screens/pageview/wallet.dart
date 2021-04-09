@@ -10,6 +10,7 @@ import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/screens/main_screens/control/see_all_plans.dart';
 import 'package:investment_app/screens/main_screens/control/withdraw.dart';
 import 'package:investment_app/utils/colors.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 class WalletPage extends StatefulWidget {
@@ -51,8 +52,6 @@ class _WalletPageState extends State<WalletPage> {
       }
     });
   }
-
-  
 
   Widget payout() => Container(
         padding: EdgeInsets.all(8),
@@ -156,7 +155,7 @@ class _WalletPageState extends State<WalletPage> {
               padding: const EdgeInsets.only(left: 4.0),
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Image.asset("assets/images/eurofull.png"),
+                child: Icon(LineIcons.moneyBill, size: 80, color: Colors.white),
               ),
             ),
             Column(
@@ -343,7 +342,18 @@ class _WalletPageState extends State<WalletPage> {
             SizedBox(height: size.height * 0.10),
             GestureDetector(
                 onTap: () {
-                  if (currentPlans.length == 0) {
+                  if (user.accountNumber == null ||
+                      user.accountName == null ||
+                      user.bankName == null) {
+                    return Get.snackbar(
+                      "Incomplete Bank Details",
+                      "Set up your Bank details in the 'Settings' screen",
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: Colors.white,
+                      colorText: Colors.black,
+                      duration: Duration(seconds: 5),
+                    );
+                  } else if (currentPlans.length == 0) {
                     return Get.snackbar(
                       "No Plans Detected!",
                       "You Currently have no plans at the moment",

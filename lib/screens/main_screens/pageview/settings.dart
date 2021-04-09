@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investment_app/models/user_assets.dart';
 import 'package:investment_app/models/users.dart';
+import 'package:investment_app/provider/user_assets_provider.dart';
 import 'package:investment_app/provider/user_provider.dart';
 import 'package:investment_app/resources/auth_methods.dart';
 import 'package:investment_app/screens/auth/login_screen.dart';
@@ -20,7 +22,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   AuthMethods authMethods = AuthMethods();
-  Widget profileContainer({String name, String phoneNumber}) => Container(
+  Widget profileContainer({String name, String phoneNumber, int planCount}) => Container(
         height: MediaQuery.of(context).size.height * 0.12,
         decoration: BoxDecoration(
             color: Colors.blue[800], borderRadius: BorderRadius.circular(35)),
@@ -39,7 +41,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             subtitle: AutoSizeText(
-              "$phoneNumber \n\nCashout date 5/07/2021",
+              "$phoneNumber \n\nPlans ${planCount.toString() ?? 0}",
               style: TextStyle(color: Colors.white),
             ),
             trailing: Container(
@@ -98,7 +100,10 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
+    UserAssetsProvider userAssetsProvider =
+        Provider.of<UserAssetsProvider>(context, listen: false);
     UserData user = userProvider.getUser;
+    UserAssets userAssets = userAssetsProvider.getAssets;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -134,6 +139,7 @@ class _SettingsState extends State<Settings> {
                 profileContainer(
                   name: user.name,
                   phoneNumber: user.phoneNo,
+                  planCount: userAssets.currentPlans.length ?? 0
                 ),
                 SizedBox(height: 25),
                 listCard(
@@ -141,8 +147,8 @@ class _SettingsState extends State<Settings> {
                   title: "Personal Info",
                   onTap: personalInfo,
                 ),
-                SizedBox(height: 20),
-                listCard(icon: LineIcons.wallet, title: "Investment Wallet"),
+                // SizedBox(height: 20),
+                // listCard(icon: LineIcons.wallet, title: "Investment Wallet"),
                 SizedBox(height: 20),
                 listCard(
                   icon: Icons.house,

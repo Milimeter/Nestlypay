@@ -9,7 +9,11 @@ class UserData {
   String referralLink;
   String phoneNo;
   bool infoFilled;
-  bool havePackages;
+  bool havePackages; 
+  String accountName;
+  String accountNumber;
+  String bankName;
+  bool isAdmin;
 
   UserData({
     this.uid,
@@ -23,6 +27,10 @@ class UserData {
     this.phoneNo,
     this.infoFilled,
     this.havePackages,
+    this.accountName,
+    this.accountNumber,
+    this.bankName,
+    this.isAdmin,
   });
 
   Map toMap(UserData user) {
@@ -38,6 +46,11 @@ class UserData {
     data['phoneNo'] = user.phoneNo;
     data['infoFilled'] = user.infoFilled;
     data['havePackages'] = user.havePackages;
+    data['accountName'] = user.accountName;
+    data['accountNumber'] = user.accountNumber;
+    data['bankName'] = user.bankName;
+    data['isAdmin'] = user.isAdmin;
+   
 
     return data;
   }
@@ -55,5 +68,9 @@ class UserData {
     this.phoneNo = mapData['phoneNo'];
     this.infoFilled = mapData['infoFilled'];
     this.havePackages = mapData['havePackages'];
+    this.accountName = mapData['accountName'];
+    this.accountNumber = mapData['accountNumber'];
+    this.bankName = mapData['bankName'];
+    this.isAdmin = mapData['isAdmin'];
   }
 }

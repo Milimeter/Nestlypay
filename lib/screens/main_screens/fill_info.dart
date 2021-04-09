@@ -121,7 +121,7 @@ class _FillInfoState extends State<FillInfo> {
                       style: TextStyle(fontSize: 28),
                     ),
                     SizedBox(height: 10),
-                    TextFormField(
+                    TextFormField( 
                         textCapitalization: TextCapitalization.words,
                         validator: (String value) {
                           return value.isEmpty

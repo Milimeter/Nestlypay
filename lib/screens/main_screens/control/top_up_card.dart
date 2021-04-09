@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_dialog/custom_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutterwave/flutterwave.dart';
 import 'package:flutterwave/models/responses/charge_response.dart';
 import 'package:investment_app/provider/user_assets_provider.dart';
@@ -33,9 +33,7 @@ class _TopUpCardState extends State<TopUpCard> {
   PaymentMethods paymentMethods = PaymentMethods();
 
   _onPressed() {
-    if (this.formKey.currentState.validate()) {
-      this._handlePaymentInitialization();
-    }
+    this._handlePaymentInitialization();
   }
 
   _handlePaymentInitialization() async {
@@ -75,6 +73,9 @@ class _TopUpCardState extends State<TopUpCard> {
             planType: widget.currentPlan, userAssetBalance: userAssetBalance);
         print("Updated user Assets and balance");
         await userAssetsProvider.refreshAssets();
+        SchedulerBinding.instance.addPostFrameCallback((_) async {
+          await userAssetsProvider.refreshAssets();
+        });
 
         print(
             "New asset balance is ${userAssetsProvider.getAssets.assetBalance}");
@@ -192,11 +193,15 @@ class _TopUpCardState extends State<TopUpCard> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Container(
-              margin: EdgeInsets.only(top: 30, left: 30),
-              child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                padding: EdgeInsets.all(15),
+                height: 50,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                margin: EdgeInsets.only(top: 40, left: 30),
+                child: Icon(Icons.arrow_back, color: Colors.blue[800]),
               ),
             ),
           ),
@@ -303,7 +308,7 @@ class _TopUpCardState extends State<TopUpCard> {
                     child: GestureDetector(
                       onTap: () => _onPressed(),
                       child: Container(
-                        height: 80,
+                        height: 60,
                         width: size.width,
                         decoration: BoxDecoration(
                           color: Colors.blue[800],

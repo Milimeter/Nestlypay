@@ -72,7 +72,7 @@ class _SupportPageState extends State<SupportPage> {
                       ListTile(
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
-                          "jackson.graham@example.com",
+                          "Customercare@nestlypay.com",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -82,7 +82,7 @@ class _SupportPageState extends State<SupportPage> {
                       ListTile(
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
-                          "nathan.roberts@example.com",
+                          "Technicalservice@nestlypay.com",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -92,7 +92,7 @@ class _SupportPageState extends State<SupportPage> {
                       ListTile(
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
-                          "bill.sanders@example.com",
+                          "info@nestlypay.com",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
