@@ -216,6 +216,7 @@ class _BankInfoState extends State<BankInfo> {
           ),
         ],
       ),
+    
     );
   }
 }

@@ -93,7 +93,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Image.asset("assets/images/forgot_password.png",
                           width: 200),
                       AutoSizeText(
-                        'Enter your email for the verification process, and we will send 4 digit code to your emailfor verification ',
+                        'Enter your email for the verification process, and we will send 4 digit code to your email for verification ',
                         style: TextStyle(fontSize: 30.0),
                         maxLines: 2,
                       ),

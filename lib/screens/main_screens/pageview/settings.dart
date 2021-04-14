@@ -88,8 +88,8 @@ class _SettingsState extends State<Settings> {
       context, MaterialPageRoute(builder: (context) => SupportPage()));
   referralPage() => Navigator.push(
       context, MaterialPageRoute(builder: (context) => ReferralPage()));
-  loginScreen() {
-    authMethods.signOut();
+  loginScreen() async{
+    await authMethods.signOut();
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),

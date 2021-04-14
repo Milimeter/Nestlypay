@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   UserProvider userProvider;
-  UserAssetsProvider userAssetsProvider;
+  UserAssetsProvider userAssetsProvider; 
 
   List<Widget> _widgetOptions = <Widget>[
     Home(),

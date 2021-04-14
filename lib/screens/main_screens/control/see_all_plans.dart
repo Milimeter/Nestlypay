@@ -378,6 +378,7 @@ class _PlansState extends State<Plans> {
           ],
         ),
       ),
+    
     );
   }
 }

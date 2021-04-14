@@ -176,12 +176,14 @@ class _HomeState extends State<Home> {
                 })
             : SizedBox(),
         actions: [
-          GestureDetector(
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreatePost()),
-                  ),
-              child: Image.asset("assets/images/vr.png")),
+          user.isAdmin != null && user.isAdmin
+              ? GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CreatePost()),
+                      ),
+                  child: Image.asset("assets/images/vr.png"))
+              : SizedBox(),
           SizedBox(width: 8),
           GestureDetector(
             onTap: () => Navigator.push(

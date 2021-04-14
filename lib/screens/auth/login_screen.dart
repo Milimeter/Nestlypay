@@ -64,89 +64,19 @@ class _LoginScreenState extends State<LoginScreen> {
         print('Signed up user: $userId');
       } catch (error) {
         print('Error: $error');
+        List<String> errors = error.toString().split(',');
+        print("Error: " + errors[1]);
+        Get.snackbar(
+          "Error!",
+          errors[1],
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          duration: Duration(seconds: 5),
+        );
         setState(() {
           _isLoading = false;
         });
-
-        switch (error.code) {
-          case "ERROR_INVALID_EMAIL":
-            errorMessage = "Your email address appears to be malformed.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-
-            break;
-          case "ERROR_WRONG_PASSWORD":
-            errorMessage = "Your password is wrong.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-            break;
-          case "ERROR_USER_NOT_FOUND":
-            errorMessage = "User with this email doesn't exist.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-            break;
-          case "ERROR_USER_DISABLED":
-            errorMessage = "User with this email has been disabled.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-            break;
-          case "ERROR_TOO_MANY_REQUESTS":
-            errorMessage = "Too many requests. Try again later.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-            break;
-          case "ERROR_OPERATION_NOT_ALLOWED":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-            return Get.snackbar(
-              "Error!",
-              errorMessage,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.white,
-              colorText: Colors.black,
-              duration: Duration(seconds: 5),
-            );
-        }
       }
     }
 

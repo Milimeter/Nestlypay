@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:investment_app/utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupportPage extends StatefulWidget {
   @override
@@ -8,6 +9,19 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
+  void _launchURL({String email}) async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+    String  url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print( 'Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,27 +73,29 @@ class _SupportPageState extends State<SupportPage> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // ListTile(
+                      //   leading: Icon(Icons.mail, color: Colors.blue),
+                      //   title: AutoSizeText(
+                      //     "(480) 555-0103",
+                      //     style: TextStyle(
+                      //       color: Colors.black,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
                       ListTile(
+                        onTap: ()=> _launchURL(email: "Customercare@nestlypay.com"),
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
-                          "(480) 555-0103",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                            "Customercare@nestlypay.com",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
                       ),
                       ListTile(
-                        leading: Icon(Icons.mail, color: Colors.blue),
-                        title: AutoSizeText(
-                          "Customercare@nestlypay.com",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      ListTile(
+                        onTap: ()=> _launchURL(email: "Technicalservice@nestlypay.com"),
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
                           "Technicalservice@nestlypay.com",
@@ -90,6 +106,7 @@ class _SupportPageState extends State<SupportPage> {
                         ),
                       ),
                       ListTile(
+                        onTap: ()=> _launchURL(email: "info@nestlypay.com" ),
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
                           "info@nestlypay.com",
@@ -133,6 +150,7 @@ class _SupportPageState extends State<SupportPage> {
           ],
         ))),
       ),
+    
     );
   }
 }

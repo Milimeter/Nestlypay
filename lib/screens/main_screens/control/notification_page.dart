@@ -113,6 +113,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 }
               }),
         ));
+ 
   }
 
   Widget postThread({String title, String description}) {
