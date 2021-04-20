@@ -118,7 +118,7 @@ class _AdminTwoState extends State<AdminTwo> {
                       if (snapshot.data.docs.length == 0) {
                         return listCard(
                             title: "No of Investors",
-                            subtitle: "16,321",
+                            subtitle: "0",
                             image: "assets/images/picb.png");
                       } else {
                         return listCard(
@@ -133,16 +133,41 @@ class _AdminTwoState extends State<AdminTwo> {
                     }
                   },
                 ),
+                // SizedBox(height: 20),
+                // listCard(
+                //     title: "No of Online Investors",
+                //     subtitle: "14 Users",
+                //     image: "assets/images/post.png"),
                 SizedBox(height: 20),
-                listCard(
-                    title: "No of Online Investors",
-                    subtitle: "14 Users",
-                    image: "assets/images/post.png"),
-                SizedBox(height: 20),
-                listCard(
-                    title: "No of revenue received",
-                    subtitle: "12,000,000",
-                    image: "assets/images/post.png"),
+                StreamBuilder<QuerySnapshot>(
+                  // <2> Pass `Stream<QuerySnapshot>` to stream
+                  stream: FirebaseFirestore.instance
+                      .collection('AppRevenue')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data.docs.length == 0) {
+                        return listCard(
+                            title: "No of revenue received",
+                            subtitle: "0",
+                            image: "assets/images/post.png");
+                      } else {
+                        return listCard(
+                            title: "No of revenue received",
+                            subtitle: snapshot.data.docs.first.data()["appRevenue"].toString(),
+                            image: "assets/images/post.png");
+                      }
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+                // listCard(
+                //     title: "No of revenue received",
+                //     subtitle: "12,000,000",
+                //     image: "assets/images/post.png"),
               ],
             ),
           ),

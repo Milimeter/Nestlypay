@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:investment_app/models/user_assets.dart';
 import 'package:investment_app/models/users.dart';
 import 'package:investment_app/provider/user_assets_provider.dart';
@@ -53,7 +54,13 @@ class _WalletPageState extends State<WalletPage> {
     });
   }
 
-  Widget payout() => Container(
+  Widget payout(
+          {String currentPlan,
+          String payoutDate,
+          String amountPaid,
+          String payout}) =>
+      Container(
+        margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(8),
         height: 200,
         width: MediaQuery.of(context).size.width,
@@ -73,7 +80,7 @@ class _WalletPageState extends State<WalletPage> {
               padding: const EdgeInsets.only(left: 4.0),
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Image.asset("assets/images/eurofull.png"),
+                child: Icon(LineIcons.moneyBill, size: 80, color: Colors.white),
               ),
             ),
             Column(
@@ -81,7 +88,7 @@ class _WalletPageState extends State<WalletPage> {
               children: [
                 ListTile(
                   title: AutoSizeText(
-                    "Garnet",
+                    currentPlan, // currentPlan
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -89,7 +96,7 @@ class _WalletPageState extends State<WalletPage> {
                     ),
                   ),
                   subtitle: AutoSizeText(
-                    "100,000",
+                    "₦$amountPaid", //amountPaid
                     style: TextStyle(color: Colors.white),
                   ),
                   trailing: Icon(
@@ -103,7 +110,7 @@ class _WalletPageState extends State<WalletPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AutoSizeText(
-                        "Expired on 08 Sept 2021",
+                        payoutDate, // payoutdate
                         style: TextStyle(color: Colors.white),
                       ),
                       Column(
@@ -119,7 +126,7 @@ class _WalletPageState extends State<WalletPage> {
                           ),
                           SizedBox(height: 2),
                           AutoSizeText(
-                            "150,000",
+                            "₦$payout", //payout
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -136,6 +143,7 @@ class _WalletPageState extends State<WalletPage> {
       );
 
   Widget noPayout() => Container(
+        margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(8),
         height: 200,
         width: MediaQuery.of(context).size.width,
@@ -336,10 +344,58 @@ class _WalletPageState extends State<WalletPage> {
               ),
             ),
             SizedBox(height: size.height * 0.04),
-            user.havePackages ? payout() : noPayout(),
+            //user.havePackages ? payout() : noPayout(),
+            //adding streambuilder for user packages
+            StreamBuilder<QuerySnapshot>(
+                // <2> Pass `Stream<QuerySnapshot>` to stream
+                stream: FirebaseFirestore.instance
+                    .collection('userPackages')
+                    .where("uid", isEqualTo: user.uid)
+                    .orderBy("timeStamp", descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.docs.length == 0) {
+                      print("===========No user payment Data=================");
+                      return ListView(
+                        shrinkWrap: true,
+                        children: [
+                          noPayout(),
+                        ],
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          print(snapshot.data.docs[index].data());
+                          return payout(
+                            currentPlan: snapshot.data.docs[index]
+                                .data()["currentPlan"]
+                                .toString(),
+                            amountPaid: snapshot.data.docs[index]
+                                .data()["amountPaid"]
+                                .toString(),
+                            payout: snapshot.data.docs[index]
+                                .data()["payout"]
+                                .toString(),
+                            payoutDate: DateFormat("yyyy-MM-dd")
+                                .format(snapshot.data.docs[index]
+                                    .data()["visiblePayoutDate"])
+                                .toString(),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
             SizedBox(height: 15),
             refBonus(refBonus: userAssets.referralBonus),
-            SizedBox(height: size.height * 0.10),
+            SizedBox(height: 10),
             GestureDetector(
                 onTap: () {
                   if (user.accountNumber == null ||

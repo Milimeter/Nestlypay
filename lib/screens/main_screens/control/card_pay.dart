@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:investment_app/screens/main_screens/control/pay.dart';
 import 'package:investment_app/screens/main_screens/control/top_up_card.dart';
 import 'package:investment_app/utils/colors.dart';
 
@@ -117,7 +118,7 @@ class _PayWithCardState extends State<PayWithCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TopUpCard(
+                            builder: (context) => PaymentPage(
                                   amount: widget.amount,
                                   currentPlan: widget.currentPlan,
                                   payout: widget.payout,

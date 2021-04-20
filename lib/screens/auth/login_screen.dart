@@ -27,6 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   bool _isEmailVerified = false;
   String errorMessage;
+  // UserProvider userProvider;
+  // UserAssetsProvider userAssetsProvider;
   @override
   dispose() {
     _passwordtextEditingController.clear();
@@ -54,17 +56,21 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       String userId = "";
       try {
-        await authMethods.signIn(_emailtextEditingController.text.trim(),
+        var id = await authMethods.signIn(
+            _emailtextEditingController.text.trim(),
             _passwordtextEditingController.text.trim());
-        print("signedIn ================>>>>>>>");
-        await _checkEmailVerification();
+
+        if (id != null) {
+          print("signedIn ============$id ====>>>>>>>");
+          _checkEmailVerification();
+        }
         // Navigator.pushReplacement(
         //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
 
-        print('Signed up user: $userId');
+        print('Signed up user: $id');
       } catch (error) {
         print('Error: $error');
-        List<String> errors = error.toString().split(',');
+        List<String> errors = error.toString().split(']');
         print("Error: " + errors[1]);
         Get.snackbar(
           "Error!",
@@ -116,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 bool filled = snapshot.data()['infoFilled'];
                 if (filled == true) {
                   Timer(
-                    Duration(seconds: 2),
+                    Duration(seconds: 6),
                     () => Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                     ),
@@ -264,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: Icon(obscureText
                                       ? Icons.visibility
-                                      : Icons.visibility_off)),
+                                      : Icons.visibility_off,)),
                               hintText: "Enter your password",
                               helperText: "No more than 14 characters.",
                               icon: Icon(Icons.lock),

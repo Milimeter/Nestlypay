@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:investment_app/screens/main_screens/control/pay.dart';
 import 'package:investment_app/screens/main_screens/control/start_investing2.dart';
 import 'package:investment_app/screens/main_screens/control/top_up_card.dart';
 import 'package:investment_app/utils/colors.dart';
@@ -132,7 +133,7 @@ class _StartInvestingState extends State<StartInvesting> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => TopUpCard(
+                        builder: (context) => PaymentPage(
                               amount: widget.amount,
                               currentPlan: widget.currentPlan,
                               payout: widget.payout,

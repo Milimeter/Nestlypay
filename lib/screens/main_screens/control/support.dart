@@ -14,11 +14,19 @@ class _SupportPageState extends State<SupportPage> {
       scheme: 'mailto',
       path: email,
     );
-    String  url = params.toString();
+    String url = params.toString();
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      print( 'Could not launch $url');
+      print('Could not launch $url');
+    }
+  }
+
+  launchSupportURL({String url}) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 
@@ -84,18 +92,20 @@ class _SupportPageState extends State<SupportPage> {
                       //   ),
                       // ),
                       ListTile(
-                        onTap: ()=> _launchURL(email: "Customercare@nestlypay.com"),
+                        onTap: () =>
+                            _launchURL(email: "Customercare@nestlypay.com"),
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
-                            "Customercare@nestlypay.com",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          "Customercare@nestlypay.com",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
                       ),
                       ListTile(
-                        onTap: ()=> _launchURL(email: "Technicalservice@nestlypay.com"),
+                        onTap: () =>
+                            _launchURL(email: "Technicalservice@nestlypay.com"),
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
                           "Technicalservice@nestlypay.com",
@@ -106,7 +116,7 @@ class _SupportPageState extends State<SupportPage> {
                         ),
                       ),
                       ListTile(
-                        onTap: ()=> _launchURL(email: "info@nestlypay.com" ),
+                        onTap: () => _launchURL(email: "info@nestlypay.com"),
                         leading: Icon(Icons.mail, color: Colors.blue),
                         title: AutoSizeText(
                           "info@nestlypay.com",
@@ -141,16 +151,21 @@ class _SupportPageState extends State<SupportPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Image.asset("assets/images/facebook.png"),
-                      Image.asset("assets/images/instagram.png"),
-                      Image.asset("assets/images/whatsapp.png"),
+                      GestureDetector(
+                          onTap: () => launchSupportURL(
+                              url: "https://twitter.com/nestlypay"),
+                          child: Image.asset("assets/images/twitter.png")),
+                      GestureDetector(
+                          onTap: () => launchSupportURL(
+                              url: "https://instagram.com/nestlypay"),
+                          child: Image.asset("assets/images/instagram.png")),
+                      // Image.asset("assets/images/whatsapp.png"),
                     ],
                   )),
             ),
           ],
         ))),
       ),
-    
     );
   }
 }

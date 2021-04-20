@@ -40,20 +40,20 @@ class _PeopleState extends State<People> {
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-        backgroundColor: UniversalColors.blueColor,
-        leading: Container(
-          margin: EdgeInsets.only(left: 9),
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.blue[100],
-            shape: BoxShape.circle,
-          ),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.blue[800]),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+        backgroundColor: UniversalColors.whiteColor,
+        // leading: Container(
+        //   margin: EdgeInsets.only(left: 9),
+        //   width: 50,
+        //   height: 50,
+        //   decoration: BoxDecoration(
+        //     color: Colors.blue[100],
+        //     shape: BoxShape.circle,
+        //   ),
+        //   child: IconButton(
+        //     icon: Icon(Icons.arrow_back, color: Colors.blue[800]),
+        //     onPressed: () => Navigator.pop(context),
+        //   ),
+        // ),
       ),
       body: user.isAdmin != null && user.isAdmin == true
           ? Container(

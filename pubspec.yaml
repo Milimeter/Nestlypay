@@ -46,8 +46,10 @@ dependencies:
   intl:
   geocoding: ^1.0.5
   geolocator: ^6.1.1
-  flutterwave: ^0.0.2
+  # flutterwave: ^0.0.2
   url_launcher: 
+  rave_flutter: 
+  flutter_svg:
 
 
 

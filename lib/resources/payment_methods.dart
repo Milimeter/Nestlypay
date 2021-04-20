@@ -40,11 +40,11 @@ class PaymentMethods {
       payout: payout,
       payoutDate: payoutDate,
       visiblePaidDate: DateTime.now(),
-      visiblePayoutDate: DateTime.now().add(Duration(days: 31)),
+      visiblePayoutDate: DateTime.now().add(Duration(days: 31)), 
       timeStamp: DateTime.now(),
     );
     firestore
-        .collection("userPayments")
+        .collection("userPayments") 
         .doc()
         .set(userPayments.toMap(userPayments));
 

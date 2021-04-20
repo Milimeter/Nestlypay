@@ -113,9 +113,9 @@ class _BankInfoState extends State<BankInfo> {
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of(context, listen: false);
     UserData user = userProvider.getUser;
-    _bankNametextEditingController.text = user.bankName ?? "";
-    _accountNametextEditingController.text = user.accountName ?? "";
-    _accountNotextEditingController.text = user.accountNumber ?? "";
+    _bankNametextEditingController.text = user.bankName ?? _bankNametextEditingController.text;
+    _accountNametextEditingController.text = user.accountName ?? _accountNametextEditingController.text;
+    _accountNotextEditingController.text = user.accountNumber ?? _accountNotextEditingController.text;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,

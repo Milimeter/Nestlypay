@@ -1,6 +1,7 @@
 class UserAssets {
   String uid;
   int assetBalance;
+  int appRevenue;
   int referralBonus;
   int payout;
   List currentPlans;
@@ -12,6 +13,7 @@ class UserAssets {
     this.referralBonus,
     this.currentPlans, 
     this.payout,
+    this.appRevenue,
    
   });
 
@@ -22,6 +24,7 @@ class UserAssets {
     data['referralBonus'] = user.referralBonus;
     data['currentPlans'] = user.currentPlans;
     data['payout'] = user.payout;
+    data['appRevenue'] = user.appRevenue;
     
 
     return data;
@@ -34,6 +37,7 @@ class UserAssets {
     this.referralBonus = mapData['referralBonus'];
     this.currentPlans = mapData['currentPlans'];
     this.payout = mapData['payout'];
+    this.appRevenue = mapData['appRevenue'];
     
   }
 }
