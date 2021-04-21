@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:investment_app/screens/main_screens/control/access_code.dart';
+import 'package:investment_app/screens/main_screens/control/withdraw_request.dart';
 import 'package:investment_app/utils/colors.dart';
 
 class AdminTwo extends StatefulWidget {
@@ -71,6 +72,16 @@ class _AdminTwoState extends State<AdminTwo> {
               children: [
                 SizedBox(height: 20),
                 Image.asset("assets/images/graph.png"),
+
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> WithdrawRequest()));
+                  },
+                  child: listCard(
+                      title: "Withdrawal Request",
+                      subtitle: "Check to see requests from users",
+                      image: "assets/images/post.png"),
+                ),
                 SizedBox(height: 20),
                 // listCard(
                 //     title: "No of Users",
@@ -154,7 +165,9 @@ class _AdminTwoState extends State<AdminTwo> {
                       } else {
                         return listCard(
                             title: "No of revenue received",
-                            subtitle: snapshot.data.docs.first.data()["appRevenue"].toString(),
+                            subtitle: snapshot.data.docs.first
+                                .data()["appRevenue"]
+                                .toString(),
                             image: "assets/images/post.png");
                       }
                     } else {
@@ -164,10 +177,6 @@ class _AdminTwoState extends State<AdminTwo> {
                     }
                   },
                 ),
-                // listCard(
-                //     title: "No of revenue received",
-                //     subtitle: "12,000,000",
-                //     image: "assets/images/post.png"),
               ],
             ),
           ),

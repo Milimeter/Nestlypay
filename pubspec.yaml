@@ -49,8 +49,7 @@ dependencies:
   # flutterwave: ^0.0.2
   url_launcher: 
   rave_flutter: 
-  flutter_svg:
-
+  # firebase_messaging: ^5.0.2
 
 
 dev_dependencies:

@@ -54,91 +54,97 @@ class _WalletPageState extends State<WalletPage> {
     });
   }
 
-  Widget payout(
-          {String currentPlan,
-          String payoutDate,
-          String amountPaid,
-          String payout}) =>
-      Container(
-        margin: EdgeInsets.only(bottom: 10),
-        padding: EdgeInsets.all(8),
-        height: 200,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(9),
-          gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Colors.blueGrey,
-                Colors.orange,
-              ]),
-        ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(LineIcons.moneyBill, size: 80, color: Colors.white),
+  Widget payout({
+    String currentPlan,
+    String payoutDate,
+    String amountPaid,
+    String payout,
+    Function onTap,
+  }) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.all(8),
+          height: 200,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9),
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.blueGrey,
+                  Colors.orange,
+                ]),
+          ),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child:
+                      Icon(LineIcons.moneyBill, size: 80, color: Colors.white),
+                ),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ListTile(
-                  title: AutoSizeText(
-                    currentPlan, // currentPlan
-                    style: TextStyle(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ListTile(
+                    title: AutoSizeText(
+                      currentPlan, // currentPlan
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: AutoSizeText(
+                      "₦$amountPaid", //amountPaid
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: Icon(
+                      Icons.more_horiz,
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle: AutoSizeText(
-                    "₦$amountPaid", //amountPaid
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  trailing: Icon(
-                    Icons.more_horiz,
-                    color: Colors.white,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AutoSizeText(
-                        payoutDate, // payoutdate
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Column(
-                        children: [
-                          AutoSizeText(
-                            "Payout",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          SizedBox(height: 2),
-                          AutoSizeText(
-                            "₦$payout", //payout
-                            style: TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AutoSizeText(
+                          payoutDate, // payoutdate
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Column(
+                          children: [
+                            AutoSizeText(
+                              "Payout",
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
-          ],
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            AutoSizeText(
+                              "₦$payout", //payout
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       );
 
@@ -346,87 +352,134 @@ class _WalletPageState extends State<WalletPage> {
             SizedBox(height: size.height * 0.04),
             //user.havePackages ? payout() : noPayout(),
             //adding streambuilder for user packages
-            StreamBuilder<QuerySnapshot>(
-                // <2> Pass `Stream<QuerySnapshot>` to stream
-                stream: FirebaseFirestore.instance
-                    .collection('userPackages')
-                    .where("uid", isEqualTo: user.uid)
-                    .orderBy("timeStamp", descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.docs.length == 0) {
-                      print("===========No user payment Data=================");
-                      return ListView(
-                        shrinkWrap: true,
-                        children: [
-                          noPayout(),
-                        ],
-                      );
-                    } else {
-                      return ListView.builder(
-                        itemCount: snapshot.data.docs.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          print(snapshot.data.docs[index].data());
-                          return payout(
-                            currentPlan: snapshot.data.docs[index]
-                                .data()["currentPlan"]
-                                .toString(),
-                            amountPaid: snapshot.data.docs[index]
-                                .data()["amountPaid"]
-                                .toString(),
-                            payout: snapshot.data.docs[index]
-                                .data()["payout"]
-                                .toString(),
-                            payoutDate: DateFormat("yyyy-MM-dd")
-                                .format(snapshot.data.docs[index]
+            SizedBox(
+              height: 200,
+              child: StreamBuilder<QuerySnapshot>(
+                  // <2> Pass `Stream<QuerySnapshot>` to stream
+                  stream: FirebaseFirestore.instance
+                      .collection('userPackages')
+                      .where("uid", isEqualTo: user.uid)
+                      // .where("uid", isEqualTo: "FlGiNv8Nk5aqUD0Z8RjZszdtC583")
+                      .orderBy("timeStamp", descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data.docs.length == 0) {
+                        print(
+                            "===========No user payment Data=================");
+                        return ListView(
+                          shrinkWrap: true,
+                          children: [
+                            noPayout(),
+                          ],
+                        );
+                      } else {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.docs.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            print(snapshot.data.docs[index].data());
+                            print(
+                                "=========${DateTime.now().add(Duration(days: 31))}========");
+                            DateTime myDateTime = (snapshot.data.docs[index]
                                     .data()["visiblePayoutDate"])
-                                .toString(),
-                          );
-                        },
+                                .toDate();
+                            print(myDateTime);
+                            var payoutdate = myDateTime.toString().split(" ");
+                            print(payoutdate[0]);
+                            return payout(
+                                currentPlan: snapshot.data.docs[index]
+                                    .data()["currentPlan"]
+                                    .toString(),
+                                amountPaid: snapshot.data.docs[index]
+                                    .data()["amountPaid"]
+                                    .toString(),
+                                payout: snapshot.data.docs[index]
+                                    .data()["payout"]
+                                    .toString(),
+                                payoutDate: payoutdate[0].toString(),
+                                onTap: () {
+                                  if (user.accountNumber == null ||
+                                      user.accountName == null ||
+                                      user.bankName == null) {
+                                    return Get.snackbar(
+                                      "Incomplete Bank Details",
+                                      "Set up your Bank details in the 'Settings' screen",
+                                      snackPosition: SnackPosition.TOP,
+                                      backgroundColor: Colors.white,
+                                      colorText: Colors.black,
+                                      duration: Duration(seconds: 5),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => WithdrawMoney(
+                                                payout: snapshot
+                                                    .data.docs[index]
+                                                    .data()["payout"]
+                                                    .toString(),
+                                                amountPaid: snapshot
+                                                    .data.docs[index]
+                                                    .data()["amountPaid"]
+                                                    .toString(),
+                                                payoutDate:
+                                                    payoutdate[0].toString(),
+                                                planType: snapshot
+                                                    .data.docs[index]
+                                                    .data()["currentPlan"],
+                                                uniqueId: snapshot
+                                                    .data.docs[index]
+                                                    .data()["uniqueId"],
+                                              )),
+                                    );
+                                  }
+                                });
+                          },
+                        );
+                      }
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
                       );
                     }
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }),
+                  }),
+            ),
             SizedBox(height: 15),
             refBonus(refBonus: userAssets.referralBonus),
             SizedBox(height: 10),
-            GestureDetector(
-                onTap: () {
-                  if (user.accountNumber == null ||
-                      user.accountName == null ||
-                      user.bankName == null) {
-                    return Get.snackbar(
-                      "Incomplete Bank Details",
-                      "Set up your Bank details in the 'Settings' screen",
-                      snackPosition: SnackPosition.TOP,
-                      backgroundColor: Colors.white,
-                      colorText: Colors.black,
-                      duration: Duration(seconds: 5),
-                    );
-                  } else if (currentPlans.length == 0) {
-                    return Get.snackbar(
-                      "No Plans Detected!",
-                      "You Currently have no plans at the moment",
-                      snackPosition: SnackPosition.TOP,
-                      backgroundColor: Colors.white,
-                      colorText: Colors.black,
-                      duration: Duration(seconds: 5),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => WithdrawMoney()),
-                    );
-                  }
-                },
-                child: withdraw()),
-            SizedBox(height: 18),
+            // GestureDetector(
+            //     onTap: () {
+            //       if (user.accountNumber == null ||
+            //           user.accountName == null ||
+            //           user.bankName == null) {
+            //         return Get.snackbar(
+            //           "Incomplete Bank Details",
+            //           "Set up your Bank details in the 'Settings' screen",
+            //           snackPosition: SnackPosition.TOP,
+            //           backgroundColor: Colors.white,
+            //           colorText: Colors.black,
+            //           duration: Duration(seconds: 5),
+            //         );
+            //       } else if (currentPlans.length == 0) {
+            //         return Get.snackbar(
+            //           "No Plans Detected!",
+            //           "You Currently have no plans at the moment",
+            //           snackPosition: SnackPosition.TOP,
+            //           backgroundColor: Colors.white,
+            //           colorText: Colors.black,
+            //           duration: Duration(seconds: 5),
+            //         );
+            //       } else {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(builder: (context) => WithdrawMoney()),
+            //         );
+            //       }
+            //     },
+            //     child: withdraw()),
+            // SizedBox(height: 18),
             Center(
               child: GestureDetector(
                 onTap: () {

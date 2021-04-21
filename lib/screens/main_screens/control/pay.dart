@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -265,6 +266,12 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
   void startPayment({double amount}) async {
     var name = userProvider.getUser.name.split(' ');
     var firstName = name[0] ?? "";
@@ -301,6 +308,7 @@ class _PaymentPageState extends State<PaymentPage> {
         .prompt(context: context, initializer: initializer);
     print(response);
     if (response != null) {
+      var uniqueId = getRandomString(5);
       print(
           "-------------------------response not null-----------------------");
       print(response?.message);
@@ -314,6 +322,7 @@ class _PaymentPageState extends State<PaymentPage> {
           paidDate: paidDate,
           payoutDate: payoutDate,
           payout: int.parse(widget.payout),
+          uniqueId: uniqueId.toString(),
         );
         print(
             "--------------------Updated addPaymentDetailsToUserDatabase()---------------------------");

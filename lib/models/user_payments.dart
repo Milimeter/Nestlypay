@@ -1,6 +1,6 @@
 class UserPayments {
   String uid;
-
+  String uniqueId;
   int amountPaid;
   int paidDate;
   int payoutDate;
@@ -18,6 +18,7 @@ class UserPayments {
     this.payoutDate,
     this.visiblePaidDate,
     this.visiblePayoutDate,
+    this.uniqueId,
   });
 
   Map toMap(UserPayments user) {
@@ -30,6 +31,7 @@ class UserPayments {
     data['payoutDate'] = user.payoutDate;
     data['visiblePaidDate'] = user.visiblePaidDate;
     data['visiblePayoutDate'] = user.visiblePayoutDate;
+    data['uniqueId'] = user.uniqueId;
 
     return data;
   }
@@ -44,5 +46,6 @@ class UserPayments {
     this.payoutDate = mapData['payoutDate'];
     this.visiblePaidDate = mapData['visiblePaidDate'];
     this.visiblePayoutDate = mapData['visiblePayoutDate'];
+    this.uniqueId = mapData['uniqueId'];
   }
 }

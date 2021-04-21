@@ -19,6 +19,7 @@ class PaymentMethods {
     String currentPlan,
     int payout,
     int payoutDate,
+    String uniqueId,
   }) async {
     User currentUser = await getCurrentUser();
     UserPayments userPayments = UserPayments(
@@ -30,6 +31,7 @@ class PaymentMethods {
       payoutDate: payoutDate,
       visiblePaidDate: DateTime.now(),
       visiblePayoutDate: DateTime.now().add(Duration(days: 31)),
+      uniqueId: uniqueId,
     ); 
     //set user packages
     UserPackages userPackages = UserPackages(
@@ -42,6 +44,7 @@ class PaymentMethods {
       visiblePaidDate: DateTime.now(),
       visiblePayoutDate: DateTime.now().add(Duration(days: 31)), 
       timeStamp: DateTime.now(),
+      uniqueId: uniqueId,
     );
     firestore
         .collection("userPayments") 
@@ -50,7 +53,7 @@ class PaymentMethods {
 
     firestore
         .collection("userPackages")
-        .doc()
+        .doc(uniqueId)
         .set(userPackages.toMap(userPackages));
   }
 

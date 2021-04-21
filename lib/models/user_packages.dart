@@ -1,6 +1,6 @@
 class UserPackages {
   String uid;
-
+  String uniqueId;
   int amountPaid;
   int paidDate;
   int payoutDate;
@@ -19,7 +19,8 @@ class UserPackages {
       this.payoutDate,
       this.visiblePaidDate,
       this.visiblePayoutDate,
-      this.timeStamp});
+      this.timeStamp, 
+      this.uniqueId});
 
   Map toMap(UserPackages user) {
     var data = Map<String, dynamic>();
@@ -32,6 +33,7 @@ class UserPackages {
     data['visiblePaidDate'] = user.visiblePaidDate;
     data['visiblePayoutDate'] = user.visiblePayoutDate;
     data['timeStamp'] = user.timeStamp;
+    data['uniqueId'] = user.uniqueId;
 
     return data;
   }
@@ -47,5 +49,6 @@ class UserPackages {
     this.visiblePaidDate = mapData['visiblePaidDate'];
     this.visiblePayoutDate = mapData['visiblePayoutDate'];
     this.timeStamp = mapData['timeStamp'];
+    this.uniqueId = mapData['uniqueId'];
   }
 }
