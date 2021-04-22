@@ -46,10 +46,9 @@ dependencies:
   intl:
   geocoding: ^1.0.5
   geolocator: ^6.1.1
-  # flutterwave: ^0.0.2
   url_launcher: 
   rave_flutter: 
-  # firebase_messaging: ^5.0.2
+  firebase_messaging: ^5.0.2
 
 
 dev_dependencies:

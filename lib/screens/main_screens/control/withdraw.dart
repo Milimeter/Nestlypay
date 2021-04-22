@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_dialog/custom_dialog.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:investment_app/models/user_assets.dart';
@@ -18,37 +18,44 @@ class WithdrawMoney extends StatefulWidget {
   final String payout;
   final String payoutDate;
   final String uniqueId;
+  final String paydate;
 
-  const WithdrawMoney(
-      {Key key, this.planType, this.amountPaid, this.payout, this.payoutDate, this.uniqueId})
-      : super(key: key);
+  const WithdrawMoney({
+    Key key,
+    this.planType,
+    this.amountPaid,
+    this.payout,
+    this.payoutDate,
+    this.uniqueId,
+    this.paydate,
+  }) : super(key: key);
 
   @override
   _WithdrawMoneyState createState() => _WithdrawMoneyState();
 }
 
 class _WithdrawMoneyState extends State<WithdrawMoney> {
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  // static const platform = const MethodChannel('TokenChannel');
-  // String token;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  static const platform = const MethodChannel('TokenChannel');
+  String token;
   bool isLoading = false;
-  // _getdeviceToken() async {
-  //   await _firebaseMessaging.getToken().then((deviceToken) {
-  //     setState(() {
-  //       token = deviceToken.toString();
-  //     });
-  //   });
-  // }
+  _getdeviceToken() async {
+    await _firebaseMessaging.getToken().then((deviceToken) {
+      setState(() {
+        token = deviceToken.toString();
+      });
+    });
+  }
 
-  // Future<void> sendData() async {
-  //   String message;
-  //   try {
-  //     message = await platform.invokeMethod(token);
-  //     print(message);
-  //   } on PlatformException catch (e) {
-  //     message = "Failed to get data from native : '${e.message}'.";
-  //   }
-  // }
+  Future<void> sendData() async {
+    String message;
+    try {
+      message = await platform.invokeMethod(token);
+      print(message);
+    } on PlatformException catch (e) {
+      message = "Failed to get data from native : '${e.message}'.";
+    }
+  }
 
   Widget box({String text, Color color}) => Container(
         margin: EdgeInsets.all(10),
@@ -71,8 +78,8 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
   void initState() {
     super.initState();
 
-    // _getdeviceToken();
-    // sendData();
+    _getdeviceToken();
+    sendData();
   }
 
   @override
@@ -83,7 +90,9 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
     UserAssetsProvider userAssetsProvider =
         Provider.of<UserAssetsProvider>(context, listen: false);
     UserAssets userAssets = userAssetsProvider.getAssets;
-   // print(token);
+
+    print(token);
+    print("paid date ${widget.paydate}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -169,24 +178,100 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
                   GestureDetector(
                     onTap: () {
                       DateTime myDateTime = Timestamp.now().toDate();
-                      var payoutdate = myDateTime.toString().split(" ");
-                      var withdrawDate = payoutdate[0];
-                      print(withdrawDate);
-                      print(widget.payoutDate);
-                      ///TODO: check the values for compatibility
-                      if (int.parse(withdrawDate) ==
-                              int.parse(widget.payoutDate) ||
-                          int.parse(withdrawDate) >
-                              int.parse(widget.payoutDate)) {
-                        uploadwithdrawdata(
-                          uid: user.uid,
-                          bankName: user.bankName,
-                          accountName: user.accountName,
-                          accountNumber: user.accountNumber,
-                          name: user.name,
-                          assetBalance: userAssets.assetBalance,
+                      var dateTime = myDateTime.toString().split(" ");
+
+                      var currentDate = dateTime[0];
+                      print("currentDate $currentDate");
+                      var getcurrentDate = currentDate.split("-");
+                      var currentmonth = int.parse(getcurrentDate[1]);
+                      var currentday = int.parse(getcurrentDate[2]);
+                      var currentyear = int.parse(getcurrentDate[0]);
+                      print(currentmonth);
+                      print(currentday);
+                      print(currentyear);
+                      print("============================");
+
+                      print("payout date ${widget.payoutDate}"); //2021-05-20
+                      var getpayoutmonth = widget.payoutDate.split("-");
+                      var payoutmonth = int.parse(getpayoutmonth[1]);
+                      var day = int.parse(getpayoutmonth[2]);
+                      var year = int.parse(getpayoutmonth[0]);
+                      print(year);
+                      print(payoutmonth);
+                      print(day);
+
+                      print("======================================");
+                      var getpaidDate = widget.paydate.split("-");
+                      print("paid date ${widget.paydate}");
+                      var paidmonth = int.parse(getpaidDate[1]);
+                      var payday = int.parse(getpaidDate[2]);
+                      var payyear = int.parse(getpaidDate[0]);
+                      print(payyear);
+                      print(paidmonth);
+                      print(payday);
+                      if ((currentmonth > payoutmonth ||
+                              currentmonth == payoutmonth) ||
+                          currentyear > payyear) {
+                        var daylimit1 = currentday - payday == 31;
+                        var daylimit2 = currentday - payday > 31;
+                        if (daylimit1 || daylimit2) {
+                          print("can withdraw");
+                          uploadwithdrawdata(
+                            uid: user.uid,
+                            bankName: user.bankName,
+                            accountName: user.accountName,
+                            accountNumber: user.accountNumber,
+                            name: user.name,
+                            assetBalance: userAssets.assetBalance,
+                          );
+                        } else {
+                          print("cannot withdraw");
+                        }
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => CustomDialog(
+                            content: Text(
+                              ' Unable to withdraw yet. Your investment has not reached maturity date',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+
+                                //fontSize: 20.0,
+                              ),
+                            ),
+                            title: Text('OOPS!',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            firstColor: Colors.red,
+                            secondColor: Colors.white,
+                            headerIcon: Icon(
+                              Icons.warning_amber_rounded,
+                              size: 120.0,
+                              color: Colors.white,
+                            ),
+                          ),
                         );
+                        print("cannot withdraw");
                       }
+
+                      // if (int.parse(currentDate) ==
+                      //         int.parse(widget.payoutDate) ||
+                      //     int.parse(currentDate) >
+                      //         int.parse(widget.payoutDate)) {
+                      //           print("can withdraw");
+                      // uploadwithdrawdata(
+                      //   uid: user.uid,
+                      //   bankName: user.bankName,
+                      //   accountName: user.accountName,
+                      //   accountNumber: user.accountNumber,
+                      //   name: user.name,
+                      //   assetBalance: userAssets.assetBalance,
+                      // );
+                      // }else{
+                      //   print("cannot withdraw");
+                      // }
                     },
                     child: box(
                       color: Colors.blue,
@@ -223,7 +308,7 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
       "planType": widget.planType,
       "username": name,
       "userCurrentAssetBalance": assetBalance,
-      "userFCMToken": "token",
+      "userFCMToken": token,
       "uniqueId": widget.uniqueId,
     });
     setState(() {
@@ -241,7 +326,10 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
             //fontSize: 20.0,
           ),
         ),
-        title: Text('Yeay Successful'),
+        title: Text('Yeay Successful',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
         firstColor: Colors.green,
         secondColor: Colors.white,
         headerIcon: Icon(

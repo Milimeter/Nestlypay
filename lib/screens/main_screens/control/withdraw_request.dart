@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -110,8 +110,12 @@ class _WithdrawRequestState extends State<WithdrawRequest> {
     setState(() {
       isLoading = true;
     });
-    // sendNotification("Your Withdrawal request will be handled withing 48 hours",
-    //     "NestlyPay", token);
+    if (token != "token"){
+      sendNotification("Your Withdrawal request will be handled withing 48 hours",
+        "NestlyPay", token);
+    }
+    sendNotification("Your Withdrawal request will be handled withing 48 hours",
+        "NestlyPay", token);
     FirebaseFirestore.instance
         .collection("userAssets")
         .doc(uid)
@@ -136,43 +140,43 @@ class _WithdrawRequestState extends State<WithdrawRequest> {
   var serverkey =
       "AAAA2I9Tjmk:APA91bG7Wv3KSprKjbWZbi6MfvJLtLJi3bhhiGck0P9nzNlDfFqKiChVlMOp3MQnQoq7fNgyGX4AUX-2NxmYLslRMM0WDRwVq15WVPWkxpL134JFStd3LY1Nm0ynjdZlN5y0XLEsXgOw";
 
-  // Future<void> sendNotification(
-  //     String message, String sender, String receiver) async {
-  //   print("Firebase Token: " + receiver);
-  //   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  //   await http.post(
-  //     'https://fcm.googleapis.com/fcm/send',
-  //     headers: <String, String>{
-  //       'Authorization': 'key=$serverkey',
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(<String, dynamic>{
-  //       // "message": {
-  //       "to": "$receiver",
-  //       "collapse_key": "type_a",
-  //       "priority": "high",
-  //       "notification": {
-  //         "title": "$sender",
-  //         "body": "$message",
-  //       },
-  //       "data": {
-  //         "title": "$sender",
-  //         "body": "$message",
-  //         "sound": "default",
-  //         "click_action": "FLUTTER_NOTIFICATION_CLICK",
-  //       }
-  //       // }
-  //     }),
-  //   );
-  //   final Completer<Map<String, dynamic>> completer =
-  //       Completer<Map<String, dynamic>>();
+  Future<void> sendNotification(
+      String message, String sender, String receiver) async {
+    print("Firebase Token: " + receiver);
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Authorization': 'key=$serverkey',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        // "message": {
+        "to": "$receiver",
+        "collapse_key": "type_a",
+        "priority": "high",
+        "notification": {
+          "title": "$sender",
+          "body": "$message",
+        },
+        "data": {
+          "title": "$sender",
+          "body": "$message",
+          "sound": "default",
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        }
+        // }
+      }),
+    );
+    final Completer<Map<String, dynamic>> completer =
+        Completer<Map<String, dynamic>>();
 
-  //   _firebaseMessaging.configure(
-  //     onMessage: (Map<String, dynamic> message) async {
-  //       completer.complete(message);
-  //     },
-  //   );
-  // }
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        completer.complete(message);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,11 +207,7 @@ class _WithdrawRequestState extends State<WithdrawRequest> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         print(snapshot.data.docs[index].data());
-                        // return postThread(
-                        //   title: snapshot.data.docs[index].data()["Title"],
-                        //   description:
-                        //       snapshot.data.docs[index].data()["Description"],
-                        // );
+                       
                         return withdrawButton(
                             name: snapshot.data.docs[index].data()["username"],
                             amountToPay:

@@ -59,6 +59,7 @@ class _WalletPageState extends State<WalletPage> {
     String payoutDate,
     String amountPaid,
     String payout,
+    String paydate,
     Function onTap,
   }) =>
       GestureDetector(
@@ -358,8 +359,8 @@ class _WalletPageState extends State<WalletPage> {
                   // <2> Pass `Stream<QuerySnapshot>` to stream
                   stream: FirebaseFirestore.instance
                       .collection('userPackages')
-                      .where("uid", isEqualTo: user.uid)
-                      // .where("uid", isEqualTo: "FlGiNv8Nk5aqUD0Z8RjZszdtC583")
+                      //.where("uid", isEqualTo: user.uid)
+                       .where("uid", isEqualTo: "FlGiNv8Nk5aqUD0Z8RjZszdtC583")
                       .orderBy("timeStamp", descending: true)
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -385,9 +386,14 @@ class _WalletPageState extends State<WalletPage> {
                             DateTime myDateTime = (snapshot.data.docs[index]
                                     .data()["visiblePayoutDate"])
                                 .toDate();
+                            DateTime myDateTime2 = (snapshot.data.docs[index]
+                                    .data()["visiblePaidDate"])
+                                .toDate();
                             print(myDateTime);
                             var payoutdate = myDateTime.toString().split(" ");
+                            var paydate = myDateTime2.toString().split(" ");
                             print(payoutdate[0]);
+                            print(paydate[0]);
                             return payout(
                                 currentPlan: snapshot.data.docs[index]
                                     .data()["currentPlan"]
@@ -399,6 +405,7 @@ class _WalletPageState extends State<WalletPage> {
                                     .data()["payout"]
                                     .toString(),
                                 payoutDate: payoutdate[0].toString(),
+                                paydate: paydate[0].toString(),
                                 onTap: () {
                                   if (user.accountNumber == null ||
                                       user.accountName == null ||
@@ -432,6 +439,7 @@ class _WalletPageState extends State<WalletPage> {
                                                 uniqueId: snapshot
                                                     .data.docs[index]
                                                     .data()["uniqueId"],
+                                                paydate: paydate[0].toString(),
                                               )),
                                     );
                                   }
